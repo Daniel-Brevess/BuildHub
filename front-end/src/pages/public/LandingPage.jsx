@@ -2,6 +2,8 @@ import { useState } from 'react'
 import {
   ArrowRight,
   AtSign,
+  ChevronLeft,
+  ChevronRight,
   Code2,
   ExternalLink,
   GitBranch,
@@ -18,7 +20,7 @@ import logoLight from '../../assets/logo1.png'
 import logoDark from '../../assets/logo2.png'
 
 const themes = {
-  night: {
+  tokyoDark: {
     name: 'Tokyo Night',
     background: '#0F111A',
     surface: '#1A1B26',
@@ -34,7 +36,7 @@ const themes = {
     shadow: 'rgba(0, 0, 0, 0.34)',
     overlay: 'rgba(15, 17, 26, 0.74)',
   },
-  morning: {
+  tokyoLight: {
     name: 'Tokyo Morning',
     background: '#F7F8FC',
     surface: '#FFFFFF',
@@ -49,6 +51,38 @@ const themes = {
     buttonText: '#FFFFFF',
     shadow: 'rgba(31, 35, 53, 0.12)',
     overlay: 'rgba(247, 248, 252, 0.76)',
+  },
+  premiumDark: {
+    name: 'Premium Dark',
+    background: '#000000',
+    surface: '#0A0A0A',
+    surfaceSoft: '#111111',
+    border: '#1F1F1F',
+    text: '#FFFFFF',
+    textMuted: '#A1A1AA',
+    heading: '#FFFFFF',
+    primary: '#3B82F6',
+    primaryHover: '#60A5FA',
+    accent: '#3B82F6',
+    buttonText: '#FFFFFF',
+    shadow: 'rgba(0, 0, 0, 0.44)',
+    overlay: 'rgba(0, 0, 0, 0.76)',
+  },
+  premiumLight: {
+    name: 'Premium Light',
+    background: '#FFFFFF',
+    surface: '#FAFAFA',
+    surfaceSoft: '#F4F4F5',
+    border: '#E4E4E7',
+    text: '#09090B',
+    textMuted: '#71717A',
+    heading: '#09090B',
+    primary: '#2563EB',
+    primaryHover: '#1D4ED8',
+    accent: '#2563EB',
+    buttonText: '#FFFFFF',
+    shadow: 'rgba(9, 9, 11, 0.10)',
+    overlay: 'rgba(255, 255, 255, 0.78)',
   },
 }
 
@@ -83,10 +117,56 @@ const socialLinks = [
   { name: 'Developer LinkedIn', href: 'https://www.linkedin.com/', icon: ExternalLink },
 ]
 
+const designCards = [
+  {
+    title: 'Tokyo Night',
+    icon: Moon,
+    className: 'border-[#292E42] bg-[#1A1B26] text-[#C0CAF5] hover:border-[#7AA2F7]',
+    iconClassName: 'text-[#BB9AF7]',
+    titleClassName: 'text-white',
+    textClassName: 'text-[#A9B1D6]',
+    text: 'A focused dark mode for building at night, with deep backgrounds, calm borders, blue primary actions, and purple accents.',
+  },
+  {
+    title: 'Tokyo Morning',
+    icon: SunMedium,
+    className: 'border-[#DDE2F0] bg-white text-[#1F2335] hover:border-[#3D59A1]',
+    iconClassName: 'text-[#7C3AED]',
+    titleClassName: 'text-[#111827]',
+    textClassName: 'text-[#5F687D]',
+    text: 'A clean light mode for planning during the day, with bright surfaces and a focused reading experience.',
+  },
+  {
+    title: 'Premium Dark',
+    icon: Moon,
+    className: 'border-[#1F1F1F] bg-[#0A0A0A] text-white hover:border-[#3B82F6]',
+    iconClassName: 'text-[#3B82F6]',
+    titleClassName: 'text-white',
+    textClassName: 'text-[#A1A1AA]',
+    text: 'A sharper dark direction with pure black depth, premium surfaces, blue actions, and restrained contrast.',
+  },
+  {
+    title: 'Premium Light',
+    icon: SunMedium,
+    className: 'border-[#E4E4E7] bg-[#FAFAFA] text-[#09090B] hover:border-[#2563EB]',
+    iconClassName: 'text-[#2563EB]',
+    titleClassName: 'text-[#09090B]',
+    textClassName: 'text-[#71717A]',
+    text: 'A minimal light direction inspired by modern product platforms, with crisp borders and confident blue details.',
+  },
+]
+
 function LandingPage() {
-  const [theme, setTheme] = useState('night')
-  const isMorning = theme === 'morning'
-  const activeTheme = themes[theme]
+  const [designSystem, setDesignSystem] = useState('tokyo')
+  const [colorMode, setColorMode] = useState('dark')
+  const [designSlide, setDesignSlide] = useState(0)
+  const isLightMode = colorMode === 'light'
+  const activeTheme = themes[`${designSystem}${isLightMode ? 'Light' : 'Dark'}`]
+  const maxDesignSlide = Math.ceil(designCards.length / 2) - 1
+  const visibleDesignCards = designCards.slice(
+    designSlide * 2,
+    designSlide * 2 + 2,
+  )
 
   const themeStyles = {
     '--bg': activeTheme.background,
@@ -119,26 +199,43 @@ function LandingPage() {
             className="group inline-flex items-center text-[var(--heading)]"
           >
             <img
-              src={isMorning ? logoLight : logoDark}
+              src={isLightMode ? logoLight : logoDark}
               alt="BuildHub"
               className="h-14 w-14 rounded-md object-contain transition duration-300 group-hover:-translate-y-0.5 group-hover:drop-shadow-lg sm:h-16 sm:w-16"
             />
           </a>
 
           <div className="flex items-center gap-2 sm:gap-3">
+            <div className="hidden rounded-md border border-[var(--border)] bg-[var(--surface)] p-1 shadow-sm shadow-[var(--shadow)] sm:flex">
+              {['tokyo', 'premium'].map((system) => (
+                <button
+                  className={`rounded px-3 py-1.5 text-sm font-semibold capitalize transition hover:text-[var(--heading)] ${
+                    designSystem === system
+                      ? 'bg-[var(--surface-soft)] text-[var(--heading)]'
+                      : 'text-[var(--muted)]'
+                  }`}
+                  key={system}
+                  onClick={() => setDesignSystem(system)}
+                  type="button"
+                >
+                  {system}
+                </button>
+              ))}
+            </div>
+
             <label className="hidden cursor-pointer items-center gap-2 rounded-md border border-[var(--border)] bg-[var(--surface)] px-3 py-2 text-sm font-semibold text-[var(--text)] shadow-sm shadow-[var(--shadow)] transition hover:-translate-y-0.5 hover:border-[var(--primary)] sm:inline-flex">
               <input
-                checked={isMorning}
+                checked={isLightMode}
                 className="sr-only"
-                onChange={() => setTheme(isMorning ? 'night' : 'morning')}
+                onChange={() => setColorMode(isLightMode ? 'dark' : 'light')}
                 type="checkbox"
               />
-              {isMorning ? (
+              {isLightMode ? (
                 <SunMedium size={16} aria-hidden="true" />
               ) : (
                 <Moon size={16} aria-hidden="true" />
               )}
-              {isMorning ? 'Morning' : 'Night'}
+              {isLightMode ? 'Light' : 'Dark'}
             </label>
 
             <a
@@ -297,7 +394,8 @@ function LandingPage() {
             </h2>
             <p className="mt-6 max-w-2xl text-lg leading-8 text-[var(--muted)]">
               The documented product direction includes GitHub, Discord, and
-              Notion integrations, supported by a Tokyo-inspired design system.
+              Notion integrations, supported by theme options that let users
+              compare Tokyo and Premium visual directions.
             </p>
 
             <div className="mt-8 flex flex-wrap gap-3">
@@ -317,33 +415,68 @@ function LandingPage() {
             </div>
           </div>
 
-          <div className="grid gap-5 sm:grid-cols-2">
-            <article className="rounded-lg border border-[#292E42] bg-[#1A1B26] p-6 text-[#C0CAF5] shadow-2xl shadow-[var(--shadow)] transition hover:-translate-y-1 hover:border-[#7AA2F7]">
-              <Moon className="text-[#BB9AF7]" size={28} aria-hidden="true" />
-              <h3 className="mt-5 text-xl font-bold text-white">
-                Tokyo Night
-              </h3>
-              <p className="mt-3 text-sm leading-6 text-[#A9B1D6]">
-                A focused dark mode for building at night, with deep
-                backgrounds, calm borders, blue primary actions, and purple
-                accents.
-              </p>
-            </article>
+          <div>
+            <div className="mb-4 flex justify-end gap-2">
+              <button
+                aria-label="Previous design cards"
+                className="flex h-10 w-10 items-center justify-center rounded-md border border-[var(--border)] bg-[var(--surface)] text-[var(--heading)] shadow-lg shadow-[var(--shadow)] transition hover:-translate-y-0.5 hover:border-[var(--primary)]"
+                onClick={() =>
+                  setDesignSlide((current) =>
+                    current === 0 ? maxDesignSlide : current - 1,
+                  )
+                }
+                type="button"
+              >
+                <ChevronLeft size={20} aria-hidden="true" />
+              </button>
+              <button
+                aria-label="Next design cards"
+                className="flex h-10 w-10 items-center justify-center rounded-md border border-[var(--border)] bg-[var(--surface)] text-[var(--heading)] shadow-lg shadow-[var(--shadow)] transition hover:-translate-y-0.5 hover:border-[var(--primary)]"
+                onClick={() =>
+                  setDesignSlide((current) =>
+                    current === maxDesignSlide ? 0 : current + 1,
+                  )
+                }
+                type="button"
+              >
+                <ChevronRight size={20} aria-hidden="true" />
+              </button>
+            </div>
 
-            <article className="rounded-lg border border-[#DDE2F0] bg-white p-6 text-[#1F2335] shadow-2xl shadow-[var(--shadow)] transition hover:-translate-y-1 hover:border-[#3D59A1]">
-              <SunMedium
-                className="text-[#7C3AED]"
-                size={28}
-                aria-hidden="true"
-              />
-              <h3 className="mt-5 text-xl font-bold text-[#111827]">
-                Tokyo Morning
-              </h3>
-              <p className="mt-3 text-sm leading-6 text-[#5F687D]">
-                A clean light mode for planning during the day, with bright
-                surfaces and a focused reading experience.
-              </p>
-            </article>
+            <div className="overflow-hidden [perspective:1000px]">
+              <div
+                className="grid gap-5 transition duration-500 ease-out [transform-style:preserve-3d] sm:grid-cols-2"
+                key={designSlide}
+                style={{ transform: 'rotateY(-2deg)' }}
+              >
+                {visibleDesignCards.map((card) => {
+                  const Icon = card.icon
+
+                  return (
+                    <article
+                      className={`min-h-56 rounded-lg border p-6 shadow-2xl shadow-[var(--shadow)] transition hover:-translate-y-1 ${card.className}`}
+                      key={card.title}
+                    >
+                      <Icon
+                        className={card.iconClassName}
+                        size={28}
+                        aria-hidden="true"
+                      />
+                      <h3
+                        className={`mt-5 text-xl font-bold ${card.titleClassName}`}
+                      >
+                        {card.title}
+                      </h3>
+                      <p
+                        className={`mt-3 text-sm leading-6 ${card.textClassName}`}
+                      >
+                        {card.text}
+                      </p>
+                    </article>
+                  )
+                })}
+              </div>
+            </div>
           </div>
         </div>
       </section>
@@ -410,11 +543,11 @@ function LandingPage() {
         <div className="mx-auto flex max-w-7xl flex-col gap-6 md:flex-row md:items-center md:justify-between">
           <div className="flex items-center gap-3">
             <img
-              src={isMorning ? logoLight : logoDark}
+              src={isLightMode ? logoLight : logoDark}
               alt="BuildHub"
               className="h-8 w-8 rounded-sm object-contain"
             />
-            <p>Copyright © 2026 BuildHub. All rights reserved.</p>
+            <p>Copyright (c) 2026 BuildHub. All rights reserved.</p>
           </div>
 
           <div className="flex flex-wrap items-center gap-4">
