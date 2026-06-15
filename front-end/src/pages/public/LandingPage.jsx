@@ -248,7 +248,7 @@ function LandingPage() {
               href="#waitlist"
               className="rounded-md bg-[var(--heading)] px-4 py-2 text-sm font-bold text-[var(--bg)] shadow-lg shadow-[var(--shadow)] transition hover:-translate-y-0.5 hover:bg-[var(--primary)] hover:text-[var(--button-text)]"
             >
-              enter to waiting fila
+              enter to waiting list
             </a>
           </div>
         </nav>
@@ -535,6 +535,28 @@ function LandingPage() {
                 <ArrowRight size={18} aria-hidden="true" />
               </button>
             </div>
+
+            <fieldset className="mt-5">
+              <legend className="text-sm font-semibold text-[var(--heading)]">
+                Which design direction do you prefer?
+              </legend>
+              <div className="mt-3 grid gap-3 sm:grid-cols-2">
+                {['Premium design', 'Tokyo design'].map((option) => (
+                  <label
+                    className="flex cursor-pointer items-center gap-3 rounded-md border border-[var(--border)] bg-[var(--bg)] px-4 py-3 text-sm font-semibold text-[var(--text)] transition hover:border-[var(--primary)] hover:bg-[var(--surface-soft)]"
+                    key={option}
+                  >
+                    <input
+                      className="h-4 w-4 rounded border-[var(--border)] accent-[var(--primary)]"
+                      name="design-preference"
+                      type="checkbox"
+                      value={option}
+                    />
+                    {option}
+                  </label>
+                ))}
+              </div>
+            </fieldset>
           </form>
         </div>
       </section>
