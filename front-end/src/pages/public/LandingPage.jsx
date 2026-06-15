@@ -1,8 +1,9 @@
 import { useState } from 'react'
 import {
   ArrowRight,
-  CheckCircle2,
+  AtSign,
   Code2,
+  ExternalLink,
   GitBranch,
   Layers3,
   MessageSquare,
@@ -51,17 +52,6 @@ const themes = {
   },
 }
 
-const mvpFeatures = [
-  'Sign up and login',
-  'User profile',
-  'Project creation',
-  'Project feed',
-  'Request to join a project',
-  'Member approval and rejection',
-  'Project dashboard',
-  'GitHub, Discord, and Notion integrations',
-]
-
 const productCards = [
   {
     icon: Code2,
@@ -80,18 +70,17 @@ const productCards = [
   },
 ]
 
-const roadmap = [
-  'Landing page and validation',
-  'Functional MVP',
-  'Team formation',
-  'Monetization',
-  'AI and advanced matching',
-]
-
 const integrations = [
   { name: 'GitHub', icon: GitBranch },
   { name: 'Discord', icon: MessageSquare },
   { name: 'Notion', icon: NotepadText },
+]
+
+const socialLinks = [
+  { name: 'GitHub', href: 'https://github.com/Daniel-Brevess/BuildHub', icon: GitBranch },
+  { name: 'Instagram', href: '#', icon: AtSign },
+  { name: 'Discord', href: '#', icon: MessageSquare },
+  { name: 'Developer LinkedIn', href: 'https://www.linkedin.com/', icon: ExternalLink },
 ]
 
 function LandingPage() {
@@ -297,45 +286,6 @@ function LandingPage() {
         </div>
       </section>
 
-      <section
-        id="mvp"
-        className="flex min-h-screen items-center border-b border-[var(--border)] px-6 py-24 lg:px-10"
-      >
-        <div className="mx-auto grid w-full max-w-7xl gap-12 lg:grid-cols-[0.85fr_1.15fr]">
-          <div>
-            <p className="text-sm font-bold uppercase tracking-[0.2em] text-[var(--accent)]">
-              MVP Scope
-            </p>
-            <h2 className="mt-4 max-w-2xl text-4xl font-bold leading-tight tracking-normal text-[var(--heading)] sm:text-5xl">
-              The first version focuses on getting teams moving.
-            </h2>
-            <p className="mt-6 max-w-2xl text-lg leading-8 text-[var(--muted)]">
-              From login to project dashboards, the MVP is shaped around the
-              core flow of creating projects, discovering them, and forming a
-              team with approval control.
-            </p>
-          </div>
-
-          <div className="grid gap-4 sm:grid-cols-2">
-            {mvpFeatures.map((feature) => (
-              <div
-                className="group flex min-h-24 items-start gap-3 rounded-lg border border-[var(--border)] bg-[var(--surface)] p-4 shadow-xl shadow-[var(--shadow)] transition hover:-translate-y-1 hover:border-[var(--primary)]"
-                key={feature}
-              >
-                <CheckCircle2
-                  className="mt-0.5 shrink-0 text-[var(--primary)] transition group-hover:text-[var(--accent)]"
-                  size={20}
-                  aria-hidden="true"
-                />
-                <p className="text-sm font-semibold leading-6 text-[var(--heading)]">
-                  {feature}
-                </p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
       <section className="flex min-h-screen items-center border-b border-[var(--border)] px-6 py-24 lg:px-10">
         <div className="mx-auto grid w-full max-w-7xl gap-12 lg:grid-cols-[1.05fr_0.95fr]">
           <div>
@@ -398,43 +348,9 @@ function LandingPage() {
         </div>
       </section>
 
-      <section className="flex min-h-screen items-center border-b border-[var(--border)] px-6 py-24 lg:px-10">
-        <div className="mx-auto grid w-full max-w-7xl gap-12 lg:grid-cols-[0.85fr_1.15fr]">
-          <div>
-            <p className="text-sm font-bold uppercase tracking-[0.2em] text-[var(--primary)]">
-              Roadmap
-            </p>
-            <h2 className="mt-4 max-w-2xl text-4xl font-bold leading-tight tracking-normal text-[var(--heading)] sm:text-5xl">
-              A clear path from validation to smart matching.
-            </h2>
-          </div>
-
-          <ol className="grid gap-4">
-            {roadmap.map((phase, index) => (
-              <li
-                className="flex gap-4 rounded-lg border border-[var(--border)] bg-[var(--surface)] p-5 shadow-xl shadow-[var(--shadow)] transition hover:-translate-y-1 hover:border-[var(--primary)]"
-                key={phase}
-              >
-                <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-md bg-[var(--primary)] text-sm font-bold text-[var(--button-text)] shadow-lg shadow-[var(--shadow)]">
-                  {index + 1}
-                </span>
-                <div>
-                  <p className="text-sm font-semibold text-[var(--primary)]">
-                    Phase {index + 1}
-                  </p>
-                  <h3 className="mt-1 text-lg font-bold text-[var(--heading)]">
-                    {phase}
-                  </h3>
-                </div>
-              </li>
-            ))}
-          </ol>
-        </div>
-      </section>
-
       <section
         id="waitlist"
-        className="flex min-h-screen items-center px-6 py-24 lg:px-10"
+        className="flex min-h-screen items-center border-b border-[var(--border)] px-6 py-24 lg:px-10"
       >
         <div className="mx-auto grid w-full max-w-7xl items-center gap-12 lg:grid-cols-[0.95fr_1.05fr]">
           <div>
@@ -489,6 +405,44 @@ function LandingPage() {
           </form>
         </div>
       </section>
+
+      <footer className="border-t border-[var(--border)] bg-[var(--surface)] px-6 py-8 text-sm text-[var(--muted)] lg:px-10">
+        <div className="mx-auto flex max-w-7xl flex-col gap-6 md:flex-row md:items-center md:justify-between">
+          <div className="flex items-center gap-3">
+            <img
+              src={isMorning ? logoLight : logoDark}
+              alt="BuildHub"
+              className="h-8 w-8 rounded-sm object-contain"
+            />
+            <p>Copyright © 2026 BuildHub. All rights reserved.</p>
+          </div>
+
+          <div className="flex flex-wrap items-center gap-4">
+            <a
+              href="#about"
+              className="font-semibold text-[var(--text)] transition hover:text-[var(--primary)]"
+            >
+              About us
+            </a>
+            {socialLinks.map((link) => {
+              const Icon = link.icon
+
+              return (
+                <a
+                  className="inline-flex items-center gap-2 font-semibold text-[var(--text)] transition hover:text-[var(--primary)]"
+                  href={link.href}
+                  key={link.name}
+                  rel="noreferrer"
+                  target={link.href.startsWith('http') ? '_blank' : undefined}
+                >
+                  <Icon size={16} aria-hidden="true" />
+                  {link.name}
+                </a>
+              )
+            })}
+          </div>
+        </div>
+      </footer>
     </main>
   )
 }
