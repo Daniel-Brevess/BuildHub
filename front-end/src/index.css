@@ -5,3 +5,29 @@ body {
   min-width: 320px;
   min-height: 100vh;
 }
+
+.scroll-fade-up {
+  animation: fade-up-on-scroll linear both;
+  animation-timeline: view();
+  animation-range: exit -10% exit 80%;
+  will-change: opacity, transform;
+}
+
+@keyframes fade-up-on-scroll {
+  from {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  to {
+    opacity: 0;
+    transform: translateY(-56px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .scroll-fade-up {
+    animation: none;
+    will-change: auto;
+  }
+}

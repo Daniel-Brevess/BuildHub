@@ -2,15 +2,12 @@ import { useState } from 'react'
 import {
   ArrowRight,
   AtSign,
-  ChevronLeft,
-  ChevronRight,
   Code2,
   ExternalLink,
   GitBranch,
   Layers3,
   MessageSquare,
   Moon,
-  NotepadText,
   ShieldCheck,
   SunMedium,
   UsersRound,
@@ -104,12 +101,6 @@ const productCards = [
   },
 ]
 
-const integrations = [
-  { name: 'GitHub', icon: GitBranch },
-  { name: 'Discord', icon: MessageSquare },
-  { name: 'Notion', icon: NotepadText },
-]
-
 const socialLinks = [
   { name: 'GitHub', href: 'https://github.com/Daniel-Brevess/BuildHub', icon: GitBranch },
   { name: 'Instagram', href: '#', icon: AtSign },
@@ -117,56 +108,11 @@ const socialLinks = [
   { name: 'Developer LinkedIn', href: 'https://www.linkedin.com/', icon: ExternalLink },
 ]
 
-const designCards = [
-  {
-    title: 'Tokyo Night',
-    icon: Moon,
-    className: 'border-[#292E42] bg-[#1A1B26] text-[#C0CAF5] hover:border-[#7AA2F7]',
-    iconClassName: 'text-[#BB9AF7]',
-    titleClassName: 'text-white',
-    textClassName: 'text-[#A9B1D6]',
-    text: 'A focused dark mode for building at night, with deep backgrounds, calm borders, blue primary actions, and purple accents.',
-  },
-  {
-    title: 'Tokyo Morning',
-    icon: SunMedium,
-    className: 'border-[#DDE2F0] bg-white text-[#1F2335] hover:border-[#3D59A1]',
-    iconClassName: 'text-[#7C3AED]',
-    titleClassName: 'text-[#111827]',
-    textClassName: 'text-[#5F687D]',
-    text: 'A clean light mode for planning during the day, with bright surfaces and a focused reading experience.',
-  },
-  {
-    title: 'Premium Dark',
-    icon: Moon,
-    className: 'border-[#1F1F1F] bg-[#0A0A0A] text-white hover:border-[#3B82F6]',
-    iconClassName: 'text-[#3B82F6]',
-    titleClassName: 'text-white',
-    textClassName: 'text-[#A1A1AA]',
-    text: 'A sharper dark direction with pure black depth, premium surfaces, blue actions, and restrained contrast.',
-  },
-  {
-    title: 'Premium Light',
-    icon: SunMedium,
-    className: 'border-[#E4E4E7] bg-[#FAFAFA] text-[#09090B] hover:border-[#2563EB]',
-    iconClassName: 'text-[#2563EB]',
-    titleClassName: 'text-[#09090B]',
-    textClassName: 'text-[#71717A]',
-    text: 'A minimal light direction inspired by modern product platforms, with crisp borders and confident blue details.',
-  },
-]
-
 function LandingPage() {
   const [designSystem, setDesignSystem] = useState('tokyo')
   const [colorMode, setColorMode] = useState('dark')
-  const [designSlide, setDesignSlide] = useState(0)
   const isLightMode = colorMode === 'light'
   const activeTheme = themes[`${designSystem}${isLightMode ? 'Light' : 'Dark'}`]
-  const maxDesignSlide = Math.ceil(designCards.length / 2) - 1
-  const visibleDesignCards = designCards.slice(
-    designSlide * 2,
-    designSlide * 2 + 2,
-  )
 
   const themeStyles = {
     '--bg': activeTheme.background,
@@ -256,10 +202,10 @@ function LandingPage() {
 
       <section
         id="home"
-        className="relative flex min-h-screen items-center overflow-hidden border-b border-[var(--border)] px-6 pt-28 lg:px-10"
+        className="relative flex min-h-screen items-center overflow-hidden px-6 pt-28 lg:px-10"
       >
         <div className="absolute inset-0 bg-[linear-gradient(90deg,transparent_0,transparent_92%,var(--border)_92%,var(--border)_93%,transparent_93%),linear-gradient(0deg,transparent_0,transparent_92%,var(--border)_92%,var(--border)_93%,transparent_93%)] bg-[length:72px_72px] opacity-20" />
-        <div className="relative mx-auto grid w-full max-w-7xl items-center gap-12 lg:grid-cols-[1.02fr_0.98fr]">
+        <div className="scroll-fade-up relative mx-auto grid w-full max-w-7xl items-center gap-12 lg:grid-cols-[1.02fr_0.98fr]">
           <div>
             <div className="mb-8 inline-flex items-center gap-3 rounded-full border border-[var(--border)] bg-[var(--surface)] px-4 py-2 text-sm font-semibold text-[var(--primary)] shadow-xl shadow-[var(--shadow)]">
               <WandSparkles size={16} aria-hidden="true" />
@@ -341,9 +287,9 @@ function LandingPage() {
 
       <section
         id="about"
-        className="flex min-h-screen items-center border-b border-[var(--border)] px-6 py-24 lg:px-10"
+        className="flex min-h-screen items-center px-6 py-24 lg:px-10"
       >
-        <div className="mx-auto grid w-full max-w-7xl gap-12 lg:grid-cols-[0.9fr_1.1fr]">
+        <div className="scroll-fade-up mx-auto grid w-full max-w-7xl gap-12 lg:grid-cols-[0.9fr_1.1fr]">
           <div>
             <p className="text-sm font-bold uppercase tracking-[0.2em] text-[var(--primary)]">
               About us
@@ -383,109 +329,11 @@ function LandingPage() {
         </div>
       </section>
 
-      <section className="flex min-h-screen items-center border-b border-[var(--border)] px-6 py-24 lg:px-10">
-        <div className="mx-auto grid w-full max-w-7xl gap-12 lg:grid-cols-[1.05fr_0.95fr]">
-          <div>
-            <p className="text-sm font-bold uppercase tracking-[0.2em] text-[var(--primary)]">
-              Integrations and system feel
-            </p>
-            <h2 className="mt-4 max-w-2xl text-4xl font-bold leading-tight tracking-normal text-[var(--heading)] sm:text-5xl">
-              Designed for the tools teams already use.
-            </h2>
-            <p className="mt-6 max-w-2xl text-lg leading-8 text-[var(--muted)]">
-              The documented product direction includes GitHub, Discord, and
-              Notion integrations, supported by theme options that let users
-              compare Tokyo and Premium visual directions.
-            </p>
-
-            <div className="mt-8 flex flex-wrap gap-3">
-              {integrations.map((integration) => {
-                const Icon = integration.icon
-
-                return (
-                  <span
-                    className="inline-flex items-center gap-2 rounded-md border border-[var(--border)] bg-[var(--surface)] px-4 py-3 text-sm font-bold text-[var(--heading)] shadow-lg shadow-[var(--shadow)] transition hover:-translate-y-0.5 hover:border-[var(--primary)]"
-                    key={integration.name}
-                  >
-                    <Icon size={18} aria-hidden="true" />
-                    {integration.name}
-                  </span>
-                )
-              })}
-            </div>
-          </div>
-
-          <div>
-            <div className="mb-4 flex justify-end gap-2">
-              <button
-                aria-label="Previous design cards"
-                className="flex h-10 w-10 items-center justify-center rounded-md border border-[var(--border)] bg-[var(--surface)] text-[var(--heading)] shadow-lg shadow-[var(--shadow)] transition hover:-translate-y-0.5 hover:border-[var(--primary)]"
-                onClick={() =>
-                  setDesignSlide((current) =>
-                    current === 0 ? maxDesignSlide : current - 1,
-                  )
-                }
-                type="button"
-              >
-                <ChevronLeft size={20} aria-hidden="true" />
-              </button>
-              <button
-                aria-label="Next design cards"
-                className="flex h-10 w-10 items-center justify-center rounded-md border border-[var(--border)] bg-[var(--surface)] text-[var(--heading)] shadow-lg shadow-[var(--shadow)] transition hover:-translate-y-0.5 hover:border-[var(--primary)]"
-                onClick={() =>
-                  setDesignSlide((current) =>
-                    current === maxDesignSlide ? 0 : current + 1,
-                  )
-                }
-                type="button"
-              >
-                <ChevronRight size={20} aria-hidden="true" />
-              </button>
-            </div>
-
-            <div className="overflow-hidden [perspective:1000px]">
-              <div
-                className="grid gap-5 transition duration-500 ease-out [transform-style:preserve-3d] sm:grid-cols-2"
-                key={designSlide}
-                style={{ transform: 'rotateY(-2deg)' }}
-              >
-                {visibleDesignCards.map((card) => {
-                  const Icon = card.icon
-
-                  return (
-                    <article
-                      className={`min-h-56 rounded-lg border p-6 shadow-2xl shadow-[var(--shadow)] transition hover:-translate-y-1 ${card.className}`}
-                      key={card.title}
-                    >
-                      <Icon
-                        className={card.iconClassName}
-                        size={28}
-                        aria-hidden="true"
-                      />
-                      <h3
-                        className={`mt-5 text-xl font-bold ${card.titleClassName}`}
-                      >
-                        {card.title}
-                      </h3>
-                      <p
-                        className={`mt-3 text-sm leading-6 ${card.textClassName}`}
-                      >
-                        {card.text}
-                      </p>
-                    </article>
-                  )
-                })}
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
       <section
         id="waitlist"
-        className="flex min-h-screen items-center border-b border-[var(--border)] px-6 py-24 lg:px-10"
+        className="flex min-h-screen items-center px-6 py-24 lg:px-10"
       >
-        <div className="mx-auto grid w-full max-w-7xl items-center gap-12 lg:grid-cols-[0.95fr_1.05fr]">
+        <div className="scroll-fade-up mx-auto grid w-full max-w-7xl items-center gap-12 lg:grid-cols-[0.95fr_1.05fr]">
           <div>
             <p className="text-sm font-bold uppercase tracking-[0.2em] text-[var(--primary)]">
               Waitlist
@@ -541,15 +389,15 @@ function LandingPage() {
                 Which design direction do you prefer?
               </legend>
               <div className="mt-3 grid gap-3 sm:grid-cols-2">
-                {['Premium design', 'Tokyo design'].map((option) => (
+                {['Premium design', 'Tokyo design', 'Both'].map((option) => (
                   <label
                     className="flex cursor-pointer items-center gap-3 rounded-md border border-[var(--border)] bg-[var(--bg)] px-4 py-3 text-sm font-semibold text-[var(--text)] transition hover:border-[var(--primary)] hover:bg-[var(--surface-soft)]"
                     key={option}
                   >
                     <input
-                      className="h-4 w-4 rounded border-[var(--border)] accent-[var(--primary)]"
+                      className="h-3.5 w-3.5 border-[var(--border)] accent-[var(--primary)]"
                       name="design-preference"
-                      type="checkbox"
+                      type="radio"
                       value={option}
                     />
                     {option}
@@ -561,7 +409,7 @@ function LandingPage() {
         </div>
       </section>
 
-      <footer className="border-t border-[var(--border)] bg-[var(--surface)] px-6 py-8 text-sm text-[var(--muted)] lg:px-10">
+      <footer className="bg-[var(--surface)] px-6 py-8 text-sm text-[var(--muted)] lg:px-10">
         <div className="mx-auto flex max-w-7xl flex-col gap-6 md:flex-row md:items-center md:justify-between">
           <div className="flex items-center gap-3">
             <img
