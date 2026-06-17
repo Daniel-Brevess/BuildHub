@@ -1,5 +1,6 @@
 package org.danielbreves.backend.controller;
 
+import jakarta.validation.Valid;
 import org.danielbreves.backend.dto.WaitingRequestDTO;
 import org.danielbreves.backend.dto.WaitingResponseDTO;
 import org.danielbreves.backend.service.WaitingService;
@@ -20,7 +21,7 @@ public class WaitlistController {
     }
 
     @PostMapping("/enter")
-    public ResponseEntity<WaitingResponseDTO> enter(@RequestBody WaitingRequestDTO request) {
+    public ResponseEntity<WaitingResponseDTO> enter(@Valid @RequestBody WaitingRequestDTO request) {
         WaitingResponseDTO response = waitingService.enterToWaitList(request);
         return ResponseEntity.ok(response);
     }

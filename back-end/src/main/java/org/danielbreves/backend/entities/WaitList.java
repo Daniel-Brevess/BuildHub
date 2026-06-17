@@ -4,14 +4,22 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.Column;
+import jakarta.persistence.Table;
 
-@Entity(name = "users_waiting")
+@Entity
+@Table(name = "users_waiting")
 public class WaitList {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
     private Integer id;
+
+    @Column(name = "email", nullable = false, unique = true)
     private String email;
+
+    @Column(name = "value", nullable = false)
     private Integer value;
 
 
