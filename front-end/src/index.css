@@ -6,27 +6,72 @@ body {
   min-height: 100vh;
 }
 
-.scroll-fade-up {
-  animation: fade-up-on-scroll linear both;
+.scroll-side {
+  --scroll-delay: 0ms;
+  --scroll-distance: clamp(140px, 18vw, 260px);
+  animation: slide-side-on-scroll linear both;
+  animation-delay: var(--scroll-delay);
   animation-timeline: view();
-  animation-range: exit -10% exit 80%;
+  animation-range: entry -18% exit 118%;
   will-change: opacity, transform;
 }
 
-@keyframes fade-up-on-scroll {
-  from {
-    opacity: 1;
-    transform: translateY(0);
+.scroll-hero {
+  animation-name: slide-hero-on-scroll;
+  animation-delay: 0ms;
+  animation-timeline: scroll(root block);
+  animation-range: 0 100vh;
+}
+
+.scroll-from-left {
+  --scroll-enter-x: calc(var(--scroll-distance) * -1);
+  --scroll-exit-x: calc(var(--scroll-distance) * -1);
+}
+
+.scroll-from-right {
+  --scroll-enter-x: var(--scroll-distance);
+  --scroll-exit-x: var(--scroll-distance);
+}
+
+@keyframes slide-side-on-scroll {
+  0% {
+    opacity: 0;
+    transform: translateX(var(--scroll-enter-x));
   }
 
-  to {
+  100% {
     opacity: 0;
-    transform: translateY(-56px);
+    transform: translateX(var(--scroll-exit-x));
+  }
+
+  22%,
+  58% {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes slide-hero-on-scroll {
+  0%,
+  18% {
+    opacity: 1;
+    transform: translateX(0);
+  }
+
+  100% {
+    opacity: 0;
+    transform: translateX(var(--scroll-exit-x));
+  }
+}
+
+@supports not (animation-timeline: view()) {
+  .scroll-side {
+    animation: none;
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .scroll-fade-up {
+  .scroll-side {
     animation: none;
     will-change: auto;
   }

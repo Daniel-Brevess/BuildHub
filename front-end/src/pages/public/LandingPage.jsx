@@ -205,8 +205,8 @@ function LandingPage() {
         className="relative flex min-h-screen items-center overflow-hidden px-6 pt-28 lg:px-10"
       >
         <div className="absolute inset-0 bg-[linear-gradient(90deg,transparent_0,transparent_92%,var(--border)_92%,var(--border)_93%,transparent_93%),linear-gradient(0deg,transparent_0,transparent_92%,var(--border)_92%,var(--border)_93%,transparent_93%)] bg-[length:72px_72px] opacity-20" />
-        <div className="scroll-fade-up relative mx-auto grid w-full max-w-7xl items-center gap-12 lg:grid-cols-[1.02fr_0.98fr]">
-          <div>
+        <div className="relative mx-auto grid w-full max-w-7xl items-center gap-12 lg:grid-cols-[1.02fr_0.98fr]">
+          <div className="scroll-side scroll-hero scroll-from-left">
             <div className="mb-8 inline-flex items-center gap-3 rounded-full border border-[var(--border)] bg-[var(--surface)] px-4 py-2 text-sm font-semibold text-[var(--primary)] shadow-xl shadow-[var(--shadow)]">
               <WandSparkles size={16} aria-hidden="true" />
               Product builders, together
@@ -239,7 +239,7 @@ function LandingPage() {
             </div>
           </div>
 
-          <div className="relative">
+          <div className="scroll-side scroll-hero scroll-from-right relative">
             <div className="rounded-lg border border-[var(--border)] bg-[var(--surface)] p-4 shadow-2xl shadow-[var(--shadow)] transition hover:-translate-y-1">
               <div className="overflow-hidden rounded-md border border-[var(--border)] bg-[var(--bg)]">
                 <div className="flex items-center justify-between border-b border-[var(--border)] px-4 py-3">
@@ -289,8 +289,8 @@ function LandingPage() {
         id="about"
         className="flex min-h-screen items-center px-6 py-24 lg:px-10"
       >
-        <div className="scroll-fade-up mx-auto grid w-full max-w-7xl gap-12 lg:grid-cols-[0.9fr_1.1fr]">
-          <div>
+        <div className="mx-auto grid w-full max-w-7xl gap-12 lg:grid-cols-[0.9fr_1.1fr]">
+          <div className="scroll-side scroll-from-left">
             <p className="text-sm font-bold uppercase tracking-[0.2em] text-[var(--primary)]">
               About us
             </p>
@@ -305,13 +305,14 @@ function LandingPage() {
           </div>
 
           <div className="grid gap-4 sm:grid-cols-3">
-            {productCards.map((card) => {
+            {productCards.map((card, index) => {
               const Icon = card.icon
 
               return (
                 <article
-                  className="rounded-lg border border-[var(--border)] bg-[var(--surface)] p-5 shadow-xl shadow-[var(--shadow)] transition hover:-translate-y-1 hover:border-[var(--primary)]"
+                  className="scroll-side scroll-from-right rounded-lg border border-[var(--border)] bg-[var(--surface)] p-5 shadow-xl shadow-[var(--shadow)] transition hover:-translate-y-1 hover:border-[var(--primary)]"
                   key={card.title}
+                  style={{ '--scroll-delay': `${index * 70}ms` }}
                 >
                   <span className="flex h-12 w-12 items-center justify-center rounded-md bg-[var(--surface-soft)] text-[var(--accent)]">
                     <Icon size={24} aria-hidden="true" />
@@ -333,8 +334,8 @@ function LandingPage() {
         id="waitlist"
         className="flex min-h-screen items-center px-6 py-24 lg:px-10"
       >
-        <div className="scroll-fade-up mx-auto grid w-full max-w-7xl items-center gap-12 lg:grid-cols-[0.95fr_1.05fr]">
-          <div>
+        <div className="mx-auto grid w-full max-w-7xl items-center gap-12 lg:grid-cols-[0.95fr_1.05fr]">
+          <div className="scroll-side scroll-from-left">
             <p className="text-sm font-bold uppercase tracking-[0.2em] text-[var(--primary)]">
               Waitlist
             </p>
@@ -348,7 +349,7 @@ function LandingPage() {
           </div>
 
           <form
-            className="rounded-lg border border-[var(--border)] bg-[var(--surface)] p-6 shadow-2xl shadow-[var(--shadow)]"
+            className="scroll-side scroll-from-right rounded-lg border border-[var(--border)] bg-[var(--surface)] p-6 shadow-2xl shadow-[var(--shadow)]"
             onSubmit={(event) => event.preventDefault()}
           >
             <div className="mb-6 flex items-center gap-3">
