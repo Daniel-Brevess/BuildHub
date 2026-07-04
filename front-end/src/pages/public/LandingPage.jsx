@@ -17,39 +17,7 @@ import logoLight from '../../assets/logo1.png'
 import logoDark from '../../assets/logo2.png'
 
 const themes = {
-  tokyoDark: {
-    name: 'Tokyo Night',
-    background: '#0F111A',
-    surface: '#1A1B26',
-    surfaceSoft: '#202334',
-    border: '#292E42',
-    text: '#C0CAF5',
-    textMuted: '#A9B1D6',
-    heading: '#FFFFFF',
-    primary: '#7AA2F7',
-    primaryHover: '#8DB0FF',
-    accent: '#BB9AF7',
-    buttonText: '#0F111A',
-    shadow: 'rgba(0, 0, 0, 0.34)',
-    overlay: 'rgba(15, 17, 26, 0.74)',
-  },
-  tokyoLight: {
-    name: 'Tokyo Morning',
-    background: '#F7F8FC',
-    surface: '#FFFFFF',
-    surfaceSoft: '#EEF2FA',
-    border: '#DDE2F0',
-    text: '#1F2335',
-    textMuted: '#5F687D',
-    heading: '#111827',
-    primary: '#3D59A1',
-    primaryHover: '#2F477F',
-    accent: '#7C3AED',
-    buttonText: '#FFFFFF',
-    shadow: 'rgba(31, 35, 53, 0.12)',
-    overlay: 'rgba(247, 248, 252, 0.76)',
-  },
-  premiumDark: {
+  dark: {
     name: 'Premium Dark',
     background: '#000000',
     surface: '#0A0A0A',
@@ -63,9 +31,9 @@ const themes = {
     accent: '#3B82F6',
     buttonText: '#FFFFFF',
     shadow: 'rgba(0, 0, 0, 0.44)',
-    overlay: 'rgba(0, 0, 0, 0.76)',
+    overlay: 'rgba(0, 0, 0, 0.52)',
   },
-  premiumLight: {
+  light: {
     name: 'Premium Light',
     background: '#FFFFFF',
     surface: '#FAFAFA',
@@ -79,7 +47,7 @@ const themes = {
     accent: '#2563EB',
     buttonText: '#FFFFFF',
     shadow: 'rgba(9, 9, 11, 0.10)',
-    overlay: 'rgba(255, 255, 255, 0.78)',
+    overlay: 'rgba(255, 255, 255, 0.58)',
   },
 }
 
@@ -109,10 +77,10 @@ const socialLinks = [
 ]
 
 function LandingPage() {
-  const [designSystem, setDesignSystem] = useState('tokyo')
   const [colorMode, setColorMode] = useState('dark')
+  const [activeAuthCard, setActiveAuthCard] = useState(null)
   const isLightMode = colorMode === 'light'
-  const activeTheme = themes[`${designSystem}${isLightMode ? 'Light' : 'Dark'}`]
+  const activeTheme = themes[colorMode]
 
   const themeStyles = {
     '--bg': activeTheme.background,
@@ -151,22 +119,155 @@ function LandingPage() {
             />
           </a>
 
-          <div className="flex items-center gap-2 sm:gap-3">
-            <div className="hidden rounded-md border border-[var(--border)] bg-[var(--surface)] p-1 shadow-sm shadow-[var(--shadow)] sm:flex">
-              {['tokyo', 'premium'].map((system) => (
-                <button
-                  className={`rounded px-3 py-1.5 text-sm font-semibold capitalize transition hover:text-[var(--heading)] ${
-                    designSystem === system
-                      ? 'bg-[var(--surface-soft)] text-[var(--heading)]'
-                      : 'text-[var(--muted)]'
-                  }`}
-                  key={system}
-                  onClick={() => setDesignSystem(system)}
-                  type="button"
+          <div className="flex items-center gap-6 sm:gap-10">
+            <a
+              href="#about"
+              className="hidden text-sm font-semibold text-[var(--text)] transition hover:text-[var(--primary)] md:inline-flex"
+            >
+              About us
+            </a>
+
+            <div className="relative">
+              <button
+                aria-expanded={activeAuthCard === 'login'}
+                className="text-sm font-semibold text-[var(--text)] transition hover:text-[var(--primary)]"
+                onClick={() =>
+                  setActiveAuthCard(activeAuthCard === 'login' ? null : 'login')
+                }
+                type="button"
+              >
+                Login
+              </button>
+
+              {activeAuthCard === 'login' && (
+                <form
+                  className="absolute right-0 top-[calc(100%+0.75rem)] z-50 w-72 rounded-lg border border-[var(--border)] bg-[var(--surface)] p-4 shadow-2xl shadow-[var(--shadow)] sm:w-80"
+                  onSubmit={(event) => event.preventDefault()}
                 >
-                  {system}
-                </button>
-              ))}
+                  <h2 className="text-base font-bold text-[var(--heading)]">
+                    Entrar
+                  </h2>
+                  <p className="mt-1 text-sm text-[var(--muted)]">
+                    Acesse sua conta BuildHub.
+                  </p>
+
+                  <div className="mt-4 grid gap-3">
+                    <label className="sr-only" htmlFor="login-email">
+                      Email
+                    </label>
+                    <input
+                      autoComplete="email"
+                      className="min-h-11 rounded-md border border-[var(--border)] bg-[var(--bg)] px-3 text-sm font-medium text-[var(--heading)] outline-none transition placeholder:text-[var(--muted)] focus:border-[var(--primary)] focus:bg-[var(--surface)] focus:ring-4 focus:ring-[var(--primary)]/10"
+                      id="login-email"
+                      placeholder="Email"
+                      type="email"
+                    />
+
+                    <label className="sr-only" htmlFor="login-password">
+                      Senha
+                    </label>
+                    <input
+                      autoComplete="current-password"
+                      className="min-h-11 rounded-md border border-[var(--border)] bg-[var(--bg)] px-3 text-sm font-medium text-[var(--heading)] outline-none transition placeholder:text-[var(--muted)] focus:border-[var(--primary)] focus:bg-[var(--surface)] focus:ring-4 focus:ring-[var(--primary)]/10"
+                      id="login-password"
+                      placeholder="Senha"
+                      type="password"
+                    />
+
+                    <button
+                      className="inline-flex min-h-11 items-center justify-center rounded-md bg-[var(--primary)] px-4 text-sm font-bold text-[var(--button-text)] shadow-lg shadow-[var(--shadow)] transition hover:-translate-y-0.5 hover:bg-[var(--primary-hover)]"
+                      type="submit"
+                    >
+                      Entrar
+                    </button>
+                  </div>
+                </form>
+              )}
+            </div>
+
+            <div className="relative">
+              <button
+                aria-expanded={activeAuthCard === 'signup'}
+                className="text-sm font-semibold text-[var(--text)] transition hover:text-[var(--primary)]"
+                onClick={() =>
+                  setActiveAuthCard(
+                    activeAuthCard === 'signup' ? null : 'signup',
+                  )
+                }
+                type="button"
+              >
+                Cadastro
+              </button>
+
+              {activeAuthCard === 'signup' && (
+                <form
+                  className="absolute right-0 top-[calc(100%+0.75rem)] z-50 w-72 rounded-lg border border-[var(--border)] bg-[var(--surface)] p-4 shadow-2xl shadow-[var(--shadow)] sm:w-80"
+                  onSubmit={(event) => event.preventDefault()}
+                >
+                  <h2 className="text-base font-bold text-[var(--heading)]">
+                    Criar conta
+                  </h2>
+                  <p className="mt-1 text-sm text-[var(--muted)]">
+                    Comece a montar seu perfil de builder.
+                  </p>
+
+                  <div className="mt-4 grid gap-3">
+                    <label className="sr-only" htmlFor="signup-username">
+                      Username
+                    </label>
+                    <input
+                      autoComplete="username"
+                      className="min-h-11 rounded-md border border-[var(--border)] bg-[var(--bg)] px-3 text-sm font-medium text-[var(--heading)] outline-none transition placeholder:text-[var(--muted)] focus:border-[var(--primary)] focus:bg-[var(--surface)] focus:ring-4 focus:ring-[var(--primary)]/10"
+                      id="signup-username"
+                      placeholder="Username"
+                      type="text"
+                    />
+
+                    <label className="sr-only" htmlFor="signup-email">
+                      Email
+                    </label>
+                    <input
+                      autoComplete="email"
+                      className="min-h-11 rounded-md border border-[var(--border)] bg-[var(--bg)] px-3 text-sm font-medium text-[var(--heading)] outline-none transition placeholder:text-[var(--muted)] focus:border-[var(--primary)] focus:bg-[var(--surface)] focus:ring-4 focus:ring-[var(--primary)]/10"
+                      id="signup-email"
+                      placeholder="Email"
+                      type="email"
+                    />
+
+                    <label className="sr-only" htmlFor="signup-password">
+                      Senha
+                    </label>
+                    <input
+                      autoComplete="new-password"
+                      className="min-h-11 rounded-md border border-[var(--border)] bg-[var(--bg)] px-3 text-sm font-medium text-[var(--heading)] outline-none transition placeholder:text-[var(--muted)] focus:border-[var(--primary)] focus:bg-[var(--surface)] focus:ring-4 focus:ring-[var(--primary)]/10"
+                      id="signup-password"
+                      placeholder="Senha"
+                      type="password"
+                    />
+
+                    <label
+                      className="sr-only"
+                      htmlFor="signup-confirm-password"
+                    >
+                      Confirmar senha
+                    </label>
+                    <input
+                      autoComplete="new-password"
+                      className="min-h-11 rounded-md border border-[var(--border)] bg-[var(--bg)] px-3 text-sm font-medium text-[var(--heading)] outline-none transition placeholder:text-[var(--muted)] focus:border-[var(--primary)] focus:bg-[var(--surface)] focus:ring-4 focus:ring-[var(--primary)]/10"
+                      id="signup-confirm-password"
+                      placeholder="Confirmar senha"
+                      type="password"
+                    />
+
+                    <button
+                      className="inline-flex min-h-11 items-center justify-center rounded-md bg-[var(--primary)] px-4 text-sm font-bold text-[var(--button-text)] shadow-lg shadow-[var(--shadow)] transition hover:-translate-y-0.5 hover:bg-[var(--primary-hover)]"
+                      type="submit"
+                    >
+                      Criar conta
+                    </button>
+                  </div>
+                </form>
+              )}
             </div>
 
             <label className="hidden cursor-pointer items-center gap-2 rounded-md border border-[var(--border)] bg-[var(--surface)] px-3 py-2 text-sm font-semibold text-[var(--text)] shadow-sm shadow-[var(--shadow)] transition hover:-translate-y-0.5 hover:border-[var(--primary)] sm:inline-flex">
@@ -183,19 +284,6 @@ function LandingPage() {
               )}
               {isLightMode ? 'Light' : 'Dark'}
             </label>
-
-            <a
-              href="#about"
-              className="rounded-md px-3 py-2 text-sm font-semibold text-[var(--text)] transition hover:bg-[var(--surface-soft)] hover:text-[var(--heading)]"
-            >
-              About us
-            </a>
-            <a
-              href="#waitlist"
-              className="rounded-md bg-[var(--heading)] px-4 py-2 text-sm font-bold text-[var(--bg)] shadow-lg shadow-[var(--shadow)] transition hover:-translate-y-0.5 hover:bg-[var(--primary)] hover:text-[var(--button-text)]"
-            >
-              enter to waiting list
-            </a>
           </div>
         </nav>
       </header>
@@ -384,28 +472,6 @@ function LandingPage() {
                 <ArrowRight size={18} aria-hidden="true" />
               </button>
             </div>
-
-            <fieldset className="mt-5">
-              <legend className="text-sm font-semibold text-[var(--heading)]">
-                Which design direction do you prefer?
-              </legend>
-              <div className="mt-3 grid gap-3 sm:grid-cols-2">
-                {['Premium design', 'Tokyo design', 'Both'].map((option) => (
-                  <label
-                    className="flex cursor-pointer items-center gap-3 rounded-md border border-[var(--border)] bg-[var(--bg)] px-4 py-3 text-sm font-semibold text-[var(--text)] transition hover:border-[var(--primary)] hover:bg-[var(--surface-soft)]"
-                    key={option}
-                  >
-                    <input
-                      className="h-3.5 w-3.5 border-[var(--border)] accent-[var(--primary)]"
-                      name="design-preference"
-                      type="radio"
-                      value={option}
-                    />
-                    {option}
-                  </label>
-                ))}
-              </div>
-            </fieldset>
           </form>
         </div>
       </section>
