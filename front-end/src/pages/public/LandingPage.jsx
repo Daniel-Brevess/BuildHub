@@ -431,13 +431,13 @@ function LandingPage() {
               href="/about"
               className="text-sm font-black transition hover:text-[var(--electric)]"
             >
-              About
+              Sobre nós
             </a>
             <a
-              href="#preview"
+              href="/assinaturas"
               className="text-sm font-black transition hover:text-[var(--electric)]"
             >
-              Preview
+              Assinaturas
             </a>
             {['login', 'signup'].map((type) => (
               <div className="relative" key={type}>
@@ -496,14 +496,13 @@ function LandingPage() {
             </p>
 
             <div className="mt-10 flex flex-col gap-3 sm:flex-row">
-              <button
-                type="button"
-                onClick={() => setActiveAuthCard('signup')}
+              <a
+                href="/cadastro"
                 className="inline-flex items-center justify-center gap-2 rounded-full bg-[var(--primary)] px-7 py-4 text-sm font-black text-[var(--button-text)] shadow-xl shadow-[var(--shadow)] transition hover:-translate-y-1 hover:bg-[var(--primary-hover)] focus:outline-none focus:ring-4 focus:ring-[var(--primary)]/30"
               >
                 Entrar no BuildHub
                 <ArrowRight size={18} aria-hidden="true" />
-              </button>
+              </a>
               <a
                 href="/about"
                 className="inline-flex items-center justify-center gap-2 rounded-full border border-[var(--border)] bg-[var(--surface)] px-7 py-4 text-sm font-black text-[var(--button-text)] shadow-xl shadow-[var(--shadow)] transition hover:-translate-y-1"
@@ -690,14 +689,13 @@ function LandingPage() {
                   {item}
                 </div>
               ))}
-              <button
-                type="button"
-                onClick={() => setActiveAuthCard('signup')}
+              <a
+                href="/cadastro"
                 className="mt-2 inline-flex min-h-12 items-center justify-center gap-2 rounded-full bg-[var(--button-text)] px-5 text-sm font-black text-[var(--surface)] transition hover:-translate-y-1"
               >
                 Entrar no BuildHub
                 <ArrowRight size={18} aria-hidden="true" />
-              </button>
+              </a>
             </div>
           </div>
         </div>
