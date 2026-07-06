@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import {
   ArrowRight,
   AtSign,
@@ -11,7 +11,6 @@ import {
   MessageSquare,
   Moon,
   Search,
-  Sparkles,
   SunMedium,
   Target,
   UserPlus,
@@ -19,6 +18,7 @@ import {
   WandSparkles,
 } from 'lucide-react'
 import logoBlack from '../../assets/logo1.png'
+import { getInitialColorMode, persistColorMode } from './themeMode'
 
 const themes = {
   dark: {
@@ -65,31 +65,31 @@ const themes = {
 
 const painPoints = [
   'Ideias boas param porque falta time para executar.',
-  'Builders querem desafios reais, nao tarefas soltas.',
+  'Builders querem desafios reais, não tarefas soltas.',
   'Founders precisam de contexto, skills e compromisso.',
-  'Networking aleatorio raramente vira produto no ar.',
+  'Networking aleatório raramente vira produto no ar.',
 ]
 
 const solutionCards = [
   {
     icon: BriefcaseBusiness,
     title: 'Publique projetos',
-    text: 'Mostre objetivo, fase, stack, roles abertas e o tipo de colaboracao que faz sentido.',
+    text: 'Mostre objetivo, fase, stack, roles abertas e o tipo de colaboração que faz sentido.',
   },
   {
     icon: Search,
     title: 'Descubra oportunidades',
-    text: 'Encontre projetos com contexto claro, filtros por skills e espaco real para contribuir.',
+    text: 'Encontre projetos com contexto claro, filtros por skills e espaço real para contribuir.',
   },
   {
     icon: UserPlus,
     title: 'Aplique ou convide',
-    text: 'Conecte pessoas pelo papel que podem exercer, nao por conversa solta.',
+    text: 'Conecte pessoas pelo papel que podem exercer, não por conversa solta.',
   },
   {
     icon: Layers3,
-    title: 'Construa com direcao',
-    text: 'Centralize equipe, progresso e proximos passos para o projeto nao perder tracao.',
+    title: 'Construa com direção',
+    text: 'Centralize equipe, progresso e próximos passos para o projeto não perder tração.',
   },
 ]
 
@@ -97,12 +97,12 @@ const audienceCards = [
   {
     icon: Code2,
     title: 'Developers',
-    text: 'Construa experiencia real com produto, stack clara e colaboracao visivel.',
+    text: 'Construa experiência real com produto, stack clara e colaboração visível.',
   },
   {
     icon: WandSparkles,
     title: 'Designers',
-    text: 'Entre cedo na visao, modele a experiencia e trabalhe com quem executa.',
+    text: 'Entre cedo na visão, modele a experiência e trabalhe com quem executa.',
   },
   {
     icon: Target,
@@ -121,14 +121,6 @@ const workflowSteps = [
   ['Team', 'Mostre skills, interesses e disponibilidade para colaborar.'],
   ['Workspace', 'Aplique, convide pessoas e organize o time inicial.'],
   ['Launch', 'Acompanhe progresso e mantenha o produto em movimento.'],
-]
-
-const benefits = [
-  'Menos networking aleatorio',
-  'Mais projetos reais',
-  'Times por contexto e skills',
-  'Portfolio com colaboracao real',
-  'Mais chance de transformar ideia em produto',
 ]
 
 const projectRows = [
@@ -153,9 +145,9 @@ const projectRows = [
 ]
 
 const previewCards = [
-  ['Project feed', 'Oportunidades com fase, skills e intencao claras.'],
-  ['Builder profile', 'Skills, interesses e historico de colaboracao em destaque.'],
-  ['Team room', 'Roles, membros e proximos passos visiveis para todos.'],
+  ['Project feed', 'Oportunidades com fase, skills e intenção claras.'],
+  ['Builder profile', 'Skills, interesses e histórico de colaboração em destaque.'],
+  ['Team room', 'Roles, membros e próximos passos visíveis para todos.'],
 ]
 
 const socialLinks = [
@@ -182,7 +174,7 @@ function AuthForm({ type }) {
       </h2>
       <p className="mt-1 text-sm font-medium text-[var(--text-muted)]">
         {isLogin
-          ? 'Acesse seu espaco BuildHub.'
+          ? 'Acesse seu espaço BuildHub.'
           : 'Monte seu perfil de builder.'}
       </p>
 
@@ -361,10 +353,36 @@ function ProductMockup() {
 }
 
 function LandingPage() {
-  const [colorMode, setColorMode] = useState('dark')
+  const [colorMode, setColorMode] = useState(getInitialColorMode)
   const [activeAuthCard, setActiveAuthCard] = useState(null)
+  const authMenuRef = useRef(null)
   const isLightMode = colorMode === 'light'
   const activeTheme = themes[colorMode]
+
+  const handleColorModeChange = (nextColorMode) => {
+    setColorMode(nextColorMode)
+    persistColorMode(nextColorMode)
+  }
+
+  useEffect(() => {
+    if (!activeAuthCard) {
+      return undefined
+    }
+
+    const handlePointerDown = (event) => {
+      if (authMenuRef.current?.contains(event.target)) {
+        return
+      }
+
+      setActiveAuthCard(null)
+    }
+
+    document.addEventListener('pointerdown', handlePointerDown)
+
+    return () => {
+      document.removeEventListener('pointerdown', handlePointerDown)
+    }
+  }, [activeAuthCard])
 
   const themeStyles = {
     '--background': activeTheme.background,
@@ -394,10 +412,10 @@ function LandingPage() {
     >
       <header className="fixed inset-x-0 top-4 z-50 px-4">
         <nav
-          className="mx-auto flex min-h-16 max-w-5xl items-center justify-between gap-4 rounded-full border border-white/40 bg-[var(--nav)] px-4 py-2 text-[var(--nav-text)] shadow-2xl shadow-[var(--shadow)] backdrop-blur-2xl sm:px-5"
+          className="relative mx-auto flex min-h-16 max-w-5xl items-center justify-between gap-4 rounded-full border border-white/40 bg-[var(--nav)] px-4 py-2 text-[var(--nav-text)] shadow-2xl shadow-[var(--shadow)] backdrop-blur-2xl sm:px-5"
           aria-label="Main navigation"
         >
-          <a href="#home" className="group inline-flex shrink-0 items-center">
+          <a href="/" className="group inline-flex shrink-0 items-center">
             <img
               src={logoBlack}
               alt="BuildHub"
@@ -405,18 +423,15 @@ function LandingPage() {
             />
           </a>
 
-          <div className="hidden items-center gap-7 md:flex">
+          <div
+            className="absolute left-1/2 top-1/2 hidden -translate-x-1/2 -translate-y-1/2 items-center gap-7 md:flex"
+            ref={authMenuRef}
+          >
             <a
-              href="#about"
+              href="/about"
               className="text-sm font-black transition hover:text-[var(--electric)]"
             >
               About
-            </a>
-            <a
-              href="#how-it-works"
-              className="text-sm font-black transition hover:text-[var(--electric)]"
-            >
-              Como funciona
             </a>
             <a
               href="#preview"
@@ -424,9 +439,6 @@ function LandingPage() {
             >
               Preview
             </a>
-          </div>
-
-          <div className="flex items-center gap-4 sm:gap-5">
             {['login', 'signup'].map((type) => (
               <div className="relative" key={type}>
                 <button
@@ -443,12 +455,16 @@ function LandingPage() {
                 {activeAuthCard === type && <AuthForm type={type} />}
               </div>
             ))}
+          </div>
 
+          <div className="flex items-center gap-4 sm:gap-5">
             <label className="inline-flex cursor-pointer items-center gap-2 rounded-full bg-[var(--nav-text)] px-3 py-2 text-sm font-black text-[var(--surface)] transition hover:-translate-y-0.5">
               <input
                 checked={isLightMode}
                 className="sr-only"
-                onChange={() => setColorMode(isLightMode ? 'dark' : 'light')}
+                onChange={() =>
+                  handleColorModeChange(isLightMode ? 'dark' : 'light')
+                }
                 type="checkbox"
               />
               {isLightMode ? (
@@ -469,11 +485,6 @@ function LandingPage() {
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_15%_20%,var(--primary)_0,transparent_25%),radial-gradient(circle_at_85%_10%,var(--accent)_0,transparent_22%),linear-gradient(135deg,var(--background),var(--background-alt))] opacity-90" />
         <div className="relative mx-auto grid min-h-[calc(100vh-8rem)] max-w-7xl items-center gap-14 lg:grid-cols-[0.95fr_1.05fr]">
           <div>
-            <div className="mb-8 inline-flex items-center gap-3 rounded-full bg-[var(--surface)] px-5 py-3 text-sm font-black text-[var(--button-text)] shadow-xl shadow-[var(--shadow)]">
-              <Sparkles size={18} aria-hidden="true" />
-              Premium Builder Pop
-            </div>
-
             <h1 className="max-w-5xl text-6xl font-black leading-[0.9] tracking-normal text-[var(--heading)] sm:text-7xl lg:text-8xl">
               Encontre pessoas certas para construir projetos reais.
             </h1>
@@ -481,7 +492,7 @@ function LandingPage() {
             <p className="mt-7 max-w-2xl text-xl font-bold leading-8 text-[var(--text-muted)]">
               BuildHub conecta developers, designers, founders e creators para
               transformar ideias em produtos colaborativos com contexto,
-              energia e direcao.
+              energia e direção.
             </p>
 
             <div className="mt-10 flex flex-col gap-3 sm:flex-row">
@@ -494,10 +505,10 @@ function LandingPage() {
                 <ArrowRight size={18} aria-hidden="true" />
               </button>
               <a
-                href="#how-it-works"
+                href="/about"
                 className="inline-flex items-center justify-center gap-2 rounded-full border border-[var(--border)] bg-[var(--surface)] px-7 py-4 text-sm font-black text-[var(--button-text)] shadow-xl shadow-[var(--shadow)] transition hover:-translate-y-1"
               >
-                Ver como funciona
+                Conhecer o BuildHub
               </a>
             </div>
           </div>
@@ -518,8 +529,8 @@ function LandingPage() {
         <div className="mx-auto grid max-w-7xl gap-10 lg:grid-cols-[0.8fr_1.2fr]">
           <SectionIntro
             eyebrow="O problema"
-            title="Construir sozinho e o jeito mais comum de uma boa ideia parar."
-            text="A maior friccao nao e vontade. E encontrar contexto, time e direcao antes da energia acabar."
+            title="Construir sozinho é o jeito mais comum de uma boa ideia parar."
+            text="A maior fricção não é vontade. É encontrar contexto, time e direção antes da energia acabar."
           />
 
           <div className="grid gap-4 sm:grid-cols-2">
@@ -539,9 +550,9 @@ function LandingPage() {
       <section className="bg-[var(--background)] px-6 py-28 lg:px-10">
         <div className="mx-auto max-w-7xl">
           <SectionIntro
-            eyebrow="A solucao"
-            title="Um ponto de encontro para transformar intencao em equipe."
-            text="BuildHub organiza descoberta, convite e colaboracao para que cada pessoa saiba onde pode contribuir."
+            eyebrow="A solução"
+            title="Um ponto de encontro para transformar intenção em equipe."
+            text="BuildHub organiza descoberta, convite e colaboração para que cada pessoa saiba onde pode contribuir."
             center
           />
 
@@ -588,8 +599,8 @@ function LandingPage() {
       >
         <div className="mx-auto grid max-w-7xl gap-10 lg:grid-cols-[0.9fr_1.1fr]">
           <SectionIntro
-            eyebrow="Para quem e"
-            title="Cada perfil entra com uma forca diferente. O projeto ganha quando elas se encontram."
+            eyebrow="Para quem é"
+            title="Cada perfil entra com uma força diferente. O projeto ganha quando elas se encontram."
             text="BuildHub foi pensado para quem quer construir, aprender com produtos reais e colaborar com pessoas complementares."
           />
 
@@ -621,59 +632,6 @@ function LandingPage() {
       </section>
 
       <section
-        id="how-it-works"
-        className="bg-[var(--surface)] px-6 py-28 text-[var(--button-text)] lg:px-10"
-      >
-        <div className="mx-auto grid max-w-7xl items-center gap-12 lg:grid-cols-[0.9fr_1.1fr]">
-          <div>
-            <p className="text-sm font-black uppercase tracking-[0.18em] text-[var(--electric)]">
-              Como funciona
-            </p>
-            <h2 className="mt-4 text-5xl font-black leading-[0.95] sm:text-7xl">
-              Idea {'->'} Team {'->'} Workspace {'->'} Launch.
-            </h2>
-          </div>
-
-          <div className="grid gap-4">
-            {benefits.map((benefit) => (
-              <div
-                className="flex items-center gap-4 rounded-full bg-[var(--primary)] px-5 py-4 text-base font-black shadow-lg shadow-[var(--shadow)]"
-                key={benefit}
-              >
-                <CheckCircle2 size={22} aria-hidden="true" />
-                {benefit}
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      <section className="bg-[var(--background)] px-6 py-28 lg:px-10">
-        <div className="mx-auto grid max-w-7xl gap-10 lg:grid-cols-[0.95fr_1.05fr]">
-          <SectionIntro
-            eyebrow="Para que viemos"
-            title="Grandes ideias nao deveriam depender de sorte para encontrar as pessoas certas."
-            text="BuildHub existe para tirar builders do isolamento e transformar ideias em produtos colaborativos, com contexto antes de compromisso."
-          />
-
-          <article className="rounded-[2rem] border border-[var(--border)] bg-[var(--card)] p-8 shadow-xl shadow-[var(--shadow)]">
-            <p className="text-sm font-black uppercase tracking-[0.18em] text-[var(--primary)]">
-              Quem somos
-            </p>
-            <h3 className="mt-4 text-4xl font-black leading-tight text-[var(--heading)]">
-              Um lugar para quem quer construir produtos reais, mas nao quer
-              fazer isso sozinho.
-            </h3>
-            <p className="mt-5 text-base font-semibold leading-8 text-[var(--text-muted)]">
-              Nossa missao e aproximar talentos, ideias e times em um ambiente
-              onde colaboracao tem direcao e projetos tem chance real de ir ao
-              mundo.
-            </p>
-          </article>
-        </div>
-      </section>
-
-      <section
         id="preview"
         className="bg-[var(--background-alt)] px-6 py-28 lg:px-10"
       >
@@ -681,7 +639,7 @@ function LandingPage() {
           <SectionIntro
             eyebrow="Preview"
             title="Mockups vivos para uma plataforma feita por builders."
-            text="A experiencia gira em torno de projeto, perfil, time e progresso. Tudo com cara de produto desde o primeiro contato."
+            text="A experiência gira em torno de projeto, perfil, time e progresso. Tudo com cara de produto desde o primeiro contato."
             center
           />
 
@@ -713,7 +671,7 @@ function LandingPage() {
               Comece agora
             </p>
             <h2 className="mt-4 text-5xl font-black leading-[0.95] sm:text-7xl">
-              Entre no BuildHub e encontre pessoas para construir com voce.
+              Entre no BuildHub e encontre pessoas para construir com você.
             </h2>
           </div>
 
