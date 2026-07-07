@@ -34,7 +34,7 @@ const themes = {
     accent: '#F0B7FF',
     electric: '#C084FC',
     buttonText: '#07130F',
-    nav: 'rgba(244, 255, 225, 0.88)',
+    nav: 'rgba(244, 255, 225, 0.76)',
     navText: '#07130F',
     shadow: 'rgba(0, 0, 0, 0.36)',
   },
@@ -54,7 +54,7 @@ const themes = {
     accent: '#E9B6F6',
     electric: '#7C3AED',
     buttonText: '#07130F',
-    nav: 'rgba(255, 255, 255, 0.9)',
+    nav: 'rgba(255, 255, 255, 0.78)',
     navText: '#07130F',
     shadow: 'rgba(7, 19, 15, 0.14)',
   },
@@ -107,7 +107,7 @@ function AuthForm({ type }) {
 
   return (
     <form
-      className="absolute right-0 top-[calc(100%+0.9rem)] z-50 w-72 rounded-3xl border border-[var(--border)] bg-[var(--surface)] p-4 text-[var(--heading)] shadow-2xl shadow-[var(--shadow)] sm:w-80"
+      className="absolute right-0 top-[calc(100%+0.9rem)] z-50 w-72 rounded-3xl border border-white/40 bg-[var(--nav)] p-4 text-[var(--nav-text)] shadow-2xl shadow-[var(--shadow)] backdrop-blur-xl backdrop-saturate-150 [box-shadow:inset_0_1px_0_rgba(255,255,255,0.28),0_18px_56px_var(--shadow)] sm:w-80"
       onSubmit={(event) => event.preventDefault()}
     >
       <h2 className="text-lg font-black tracking-normal">
@@ -209,7 +209,7 @@ function Header({ activeAuthCard, isLightMode, setActiveAuthCard, setColorMode }
   return (
     <header className="fixed inset-x-0 top-4 z-50 px-4">
       <nav
-        className="relative mx-auto flex min-h-16 max-w-5xl items-center justify-between gap-4 rounded-full border border-white/40 bg-[var(--nav)] px-4 py-2 text-[var(--nav-text)] shadow-2xl shadow-[var(--shadow)] backdrop-blur-2xl sm:px-5"
+        className="relative mx-auto flex min-h-16 max-w-5xl items-center justify-between gap-4 rounded-full border border-white/40 bg-[var(--nav)] px-4 py-2 text-[var(--nav-text)] shadow-2xl shadow-[var(--shadow)] backdrop-blur-xl backdrop-saturate-150 [box-shadow:inset_0_1px_0_rgba(255,255,255,0.28),0_18px_56px_var(--shadow)] sm:px-5"
         aria-label="Main navigation"
       >
         <a href="/" className="group inline-flex shrink-0 items-center">
