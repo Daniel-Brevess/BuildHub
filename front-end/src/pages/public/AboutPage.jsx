@@ -226,13 +226,13 @@ function Header({ activeAuthCard, isLightMode, setActiveAuthCard, setColorMode }
         >
           <a
             href="/about"
-            className="text-sm font-black transition hover:text-[var(--electric)]"
+            className="rounded-full px-3 py-2 text-sm font-black transition hover:bg-black/10"
           >
             Sobre nós
           </a>
           <a
             href="/assinaturas"
-            className="text-sm font-black transition hover:text-[var(--electric)]"
+            className="rounded-full px-3 py-2 text-sm font-black transition hover:bg-black/10"
           >
             Assinaturas
           </a>
@@ -240,7 +240,7 @@ function Header({ activeAuthCard, isLightMode, setActiveAuthCard, setColorMode }
             <div className="relative" key={type}>
               <button
                 aria-expanded={activeAuthCard === type}
-                className="text-sm font-black transition hover:text-[var(--electric)]"
+                className="rounded-full px-3 py-2 text-sm font-black transition hover:bg-black/10"
                 onClick={() =>
                   setActiveAuthCard(activeAuthCard === type ? null : type)
                 }
