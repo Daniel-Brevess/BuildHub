@@ -1,4 +1,5 @@
 import { createBrowserRouter } from 'react-router-dom'
+import ProfilePage from './pages/private/ProfilePage'
 import AboutPage from './pages/public/AboutPage'
 import LandingPage from './pages/public/LandingPage'
 import LoginPage from './pages/public/LoginPage'
@@ -25,5 +26,9 @@ export const routes = createBrowserRouter([
   {
     path: '/login',
     element: <LoginPage />,
+  },
+  {
+    path: '/app/perfil',
+    element: <ProfilePage />,
   },
 ])
