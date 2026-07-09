@@ -1,0 +1,461 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>BuildHub - Fluxo de Páginas e Dashboard</title>
+    <style>
+      :root {
+        --bg: #ffffff;
+        --text: #111827;
+        --muted: #5b6472;
+        --soft: #f6f8f4;
+        --soft-strong: #edf5dd;
+        --border: #dfe7d7;
+        --green: #365314;
+        --lime: #a3e635;
+        --purple: #7c3aed;
+        --code: #0f172a;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        background: var(--bg);
+        color: var(--text);
+        font-family: Inter, ui-sans-serif, system-ui, -apple-system,
+          BlinkMacSystemFont, "Segoe UI", sans-serif;
+        line-height: 1.65;
+      }
+
+      .page {
+        max-width: 1040px;
+        margin: 0 auto;
+        padding: 64px 28px 96px;
+      }
+
+      header {
+        border-bottom: 1px solid var(--border);
+        padding-bottom: 36px;
+      }
+
+      .eyebrow {
+        color: var(--purple);
+        font-size: 12px;
+        font-weight: 800;
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+      }
+
+      h1,
+      h2,
+      h3 {
+        margin: 0;
+        color: var(--text);
+        line-height: 1.08;
+      }
+
+      h1 {
+        max-width: 860px;
+        margin-top: 12px;
+        font-size: clamp(42px, 7vw, 76px);
+        font-weight: 900;
+      }
+
+      h2 {
+        margin-top: 56px;
+        font-size: clamp(30px, 4vw, 44px);
+        font-weight: 850;
+      }
+
+      h3 {
+        margin-top: 28px;
+        font-size: 22px;
+        font-weight: 800;
+      }
+
+      p {
+        margin: 14px 0 0;
+        color: var(--muted);
+        font-size: 16px;
+      }
+
+      strong {
+        color: var(--text);
+      }
+
+      ul,
+      ol {
+        margin: 16px 0 0;
+        padding-left: 22px;
+        color: var(--muted);
+      }
+
+      li + li {
+        margin-top: 8px;
+      }
+
+      code {
+        border-radius: 7px;
+        background: #eef3e7;
+        color: var(--green);
+        padding: 2px 6px;
+        font-family: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+        font-size: 0.92em;
+      }
+
+      .lead {
+        max-width: 760px;
+        margin-top: 22px;
+        font-size: 19px;
+        font-weight: 550;
+      }
+
+      .meta {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        margin-top: 28px;
+      }
+
+      .pill {
+        border: 1px solid var(--border);
+        border-radius: 999px;
+        background: var(--soft);
+        color: var(--green);
+        padding: 8px 13px;
+        font-size: 13px;
+        font-weight: 800;
+      }
+
+      .grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 16px;
+        margin-top: 22px;
+      }
+
+      .grid-3 {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 16px;
+        margin-top: 22px;
+      }
+
+      .card {
+        border: 1px solid var(--border);
+        border-radius: 18px;
+        background: var(--soft);
+        padding: 20px;
+      }
+
+      .card h3 {
+        margin-top: 0;
+      }
+
+      .accent {
+        border-color: #d9ec97;
+        background: var(--soft-strong);
+      }
+
+      .note {
+        border-left: 5px solid var(--lime);
+        background: var(--soft);
+        margin-top: 22px;
+        padding: 18px 20px;
+        border-radius: 14px;
+      }
+
+      .flow {
+        border: 1px solid var(--border);
+        border-radius: 18px;
+        background: var(--soft);
+        margin-top: 22px;
+        padding: 20px;
+      }
+
+      .flow-line {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        margin-top: 14px;
+      }
+
+      .flow-node {
+        border: 1px solid var(--border);
+        border-radius: 999px;
+        background: #ffffff;
+        color: var(--green);
+        padding: 9px 13px;
+        font-size: 13px;
+        font-weight: 850;
+      }
+
+      .footer {
+        border-top: 1px solid var(--border);
+        margin-top: 64px;
+        padding-top: 20px;
+        color: var(--muted);
+        font-size: 14px;
+      }
+
+      @media (max-width: 760px) {
+        .page {
+          padding: 42px 18px 72px;
+        }
+
+        .grid,
+        .grid-3 {
+          grid-template-columns: 1fr;
+        }
+      }
+
+      @media print {
+        body {
+          background: #ffffff;
+        }
+
+        .page {
+          max-width: none;
+          padding: 24px;
+        }
+
+        .card,
+        .note,
+        .flow {
+          break-inside: avoid;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main class="page">
+      <header>
+        <div class="eyebrow">Task 2</div>
+        <h1>Fluxo de páginas e desenho inicial do dashboard</h1>
+        <p class="lead">
+          Este documento registra as decisões iniciais sobre páginas públicas,
+          páginas privadas, navegação principal e estrutura visual do dashboard
+          do BuildHub.
+        </p>
+        <div class="meta">
+          <span class="pill">Fluxo de páginas</span>
+          <span class="pill">Dashboard</span>
+          <span class="pill">Área privada</span>
+          <span class="pill">MVP</span>
+        </div>
+      </header>
+
+      <section>
+        <h2>1. Ideia geral do fluxo</h2>
+        <p>
+          O fluxo começa na landing page. A partir dela, o usuário pode conhecer
+          o produto, acessar páginas institucionais, criar uma conta ou fazer
+          login. Após o login, ele entra no dashboard, que será a tela central da
+          experiência privada.
+        </p>
+        <div class="flow">
+          <strong>Fluxo principal</strong>
+          <div class="flow-line">
+            <span class="flow-node">Landing page</span>
+            <span class="flow-node">Login</span>
+            <span class="flow-node">Dashboard</span>
+            <span class="flow-node">Perfil</span>
+            <span class="flow-node">Editar perfil</span>
+          </div>
+        </div>
+        <div class="flow">
+          <strong>Fluxo de descoberta</strong>
+          <div class="flow-line">
+            <span class="flow-node">Dashboard</span>
+            <span class="flow-node">Pesquisa</span>
+            <span class="flow-node">Vagas e projetos filtrados</span>
+          </div>
+        </div>
+      </section>
+
+      <section>
+        <h2>2. Páginas públicas</h2>
+        <div class="grid-3">
+          <article class="card accent">
+            <h3>Landing page</h3>
+            <p>
+              Entrada principal do produto. Deve vender a proposta do BuildHub e
+              conduzir para cadastro, login, sobre, assinaturas e políticas.
+            </p>
+          </article>
+          <article class="card">
+            <h3>Sobre nós</h3>
+            <p>
+              Explica a visão, o motivo da plataforma existir e o tipo de
+              comunidade que o BuildHub quer criar.
+            </p>
+          </article>
+          <article class="card">
+            <h3>Assinaturas</h3>
+            <p>
+              Apresenta os modos de uso gratuito e pago, com foco em limites e
+              benefícios claros.
+            </p>
+          </article>
+          <article class="card">
+            <h3>Login</h3>
+            <p>
+              Porta de entrada para a área privada. No MVP visual, leva ao
+              dashboard estático.
+            </p>
+          </article>
+          <article class="card">
+            <h3>Cadastro</h3>
+            <p>
+              Página para criação de conta. A integração real fica para a fase
+              de autenticação.
+            </p>
+          </article>
+          <article class="card">
+            <h3>Políticas de privacidade</h3>
+            <p>
+              Página institucional pendente. Deve existir antes do primeiro
+              deploy público com cadastro real.
+            </p>
+          </article>
+        </div>
+      </section>
+
+      <section>
+        <h2>3. Páginas privadas</h2>
+        <div class="grid">
+          <article class="card accent">
+            <h3>Dashboard</h3>
+            <p>
+              Tela central da área logada. Exibe saudação, pesquisa, feed de
+              vagas/projetos e atalhos laterais.
+            </p>
+          </article>
+          <article class="card">
+            <h3>Pesquisa</h3>
+            <p>
+              Página aberta a partir da busca do dashboard. Mostra resultados
+              relacionados ao termo pesquisado.
+            </p>
+          </article>
+          <article class="card">
+            <h3>Perfil</h3>
+            <p>
+              Mostra dados públicos do usuário, skills, interesses e projetos
+              associados.
+            </p>
+          </article>
+          <article class="card">
+            <h3>Editar perfil</h3>
+            <p>
+              Pode ser uma página dedicada ou um card/modal dentro do perfil. A
+              decisão final fica para a fase de implementação de perfil real.
+            </p>
+          </article>
+        </div>
+      </section>
+
+      <section>
+        <h2>4. Estrutura do dashboard</h2>
+        <div class="grid">
+          <article class="card accent">
+            <h3>Sidebar esquerda</h3>
+            <ul>
+              <li>Ícone de perfil.</li>
+              <li>Ícone de conversas.</li>
+              <li>Ícone de vagas aplicadas.</li>
+              <li>Botões devem ser simples, claros e acessíveis.</li>
+            </ul>
+          </article>
+          <article class="card">
+            <h3>Sidebar direita</h3>
+            <ul>
+              <li>Abre quando o usuário clica em conversas.</li>
+              <li>Mostra lista resumida de conversas.</li>
+              <li>Deve poder ser fechada sem recarregar a página.</li>
+            </ul>
+          </article>
+          <article class="card">
+            <h3>Área principal</h3>
+            <ul>
+              <li>Mensagem no topo: "Olá, nome do user!".</li>
+              <li>Barra de pesquisa em formato de cilindro.</li>
+              <li>Feed infinito visual com cards retangulares.</li>
+              <li>Cards representam vagas e projetos.</li>
+            </ul>
+          </article>
+          <article class="card">
+            <h3>Pesquisa</h3>
+            <ul>
+              <li>O usuário digita no dashboard.</li>
+              <li>Ao enviar, abre a página de pesquisa.</li>
+              <li>A página deve refletir o termo pesquisado.</li>
+            </ul>
+          </article>
+        </div>
+      </section>
+
+      <section>
+        <h2>5. Decisões de design</h2>
+        <ul>
+          <li>
+            O dashboard deve seguir a identidade visual atual do BuildHub, com
+            fundo verde escuro, contraste alto, cards claros e acentos em verde
+            limão e rosa suave.
+          </li>
+          <li>
+            A navegação privada começa simples: poucos ícones, sem excesso de
+            menus, para manter foco no feed de oportunidades.
+          </li>
+          <li>
+            O feed deve parecer vivo mesmo estático, usando variedade de cards,
+            tags, status e tipos de oportunidade.
+          </li>
+          <li>
+            A conversa lateral deve ser um painel contextual, não uma página
+            separada neste primeiro desenho.
+          </li>
+          <li>
+            A edição de perfil ainda pode ser decidida entre página dedicada ou
+            card/modal, dependendo da complexidade do formulário real.
+          </li>
+        </ul>
+      </section>
+
+      <section>
+        <h2>6. Rotas planejadas</h2>
+        <div class="grid">
+          <article class="card">
+            <h3>Públicas</h3>
+            <ul>
+              <li><code>/</code></li>
+              <li><code>/about</code></li>
+              <li><code>/assinaturas</code></li>
+              <li><code>/login</code></li>
+              <li><code>/cadastro</code></li>
+              <li><code>/privacidade</code> futura</li>
+            </ul>
+          </article>
+          <article class="card accent">
+            <h3>Privadas</h3>
+            <ul>
+              <li><code>/app/dashboard</code></li>
+              <li><code>/app/pesquisa</code></li>
+              <li><code>/app/perfil</code></li>
+              <li><code>/app/perfil/editar</code> futura</li>
+            </ul>
+          </article>
+        </div>
+      </section>
+
+      <p class="footer">
+        BuildHub - Fluxo de páginas e dashboard. Este documento deve evoluir
+        conforme a área privada sair de protótipo estático para produto real.
+      </p>
+    </main>
+  </body>
+</html>

@@ -1,4 +1,5 @@
 import { ArrowLeft, ArrowRight, LogIn } from 'lucide-react'
+import { useNavigate } from 'react-router-dom'
 import logoBlack from '../../assets/logo1.png'
 import { getInitialColorMode } from './themeMode'
 
@@ -36,6 +37,7 @@ const themes = {
 }
 
 function LoginPage() {
+  const navigate = useNavigate()
   const activeTheme = themes[getInitialColorMode()]
 
   const themeStyles = {
@@ -87,7 +89,10 @@ function LoginPage() {
 
           <form
             className="rounded-[2.5rem] border border-[var(--border)] bg-[var(--card)] p-6 shadow-2xl shadow-[var(--shadow)]"
-            onSubmit={(event) => event.preventDefault()}
+            onSubmit={(event) => {
+              event.preventDefault()
+              navigate('/app/dashboard')
+            }}
           >
             <span className="flex h-14 w-14 items-center justify-center rounded-2xl bg-[var(--primary)] text-[var(--button-text)]">
               <LogIn size={26} aria-hidden="true" />

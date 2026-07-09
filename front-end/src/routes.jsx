@@ -1,5 +1,7 @@
 import { createBrowserRouter } from 'react-router-dom'
+import DashboardPage from './pages/private/DashboardPage'
 import ProfilePage from './pages/private/ProfilePage'
+import SearchPage from './pages/private/SearchPage'
 import AboutPage from './pages/public/AboutPage'
 import LandingPage from './pages/public/LandingPage'
 import LoginPage from './pages/public/LoginPage'
@@ -26,6 +28,14 @@ export const routes = createBrowserRouter([
   {
     path: '/login',
     element: <LoginPage />,
+  },
+  {
+    path: '/app/dashboard',
+    element: <DashboardPage />,
+  },
+  {
+    path: '/app/pesquisa',
+    element: <SearchPage />,
   },
   {
     path: '/app/perfil',
