@@ -1,0 +1,645 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>BuildHub - Modelagem Inicial do Banco</title>
+    <style>
+      :root {
+        --bg: #ffffff;
+        --text: #111827;
+        --muted: #5b6472;
+        --soft: #f6f8f4;
+        --soft-strong: #edf5dd;
+        --border: #dfe7d7;
+        --green: #365314;
+        --lime: #a3e635;
+        --purple: #7c3aed;
+        --code: #0f172a;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        background: var(--bg);
+        color: var(--text);
+        font-family: Inter, ui-sans-serif, system-ui, -apple-system,
+          BlinkMacSystemFont, "Segoe UI", sans-serif;
+        line-height: 1.65;
+      }
+
+      .page {
+        max-width: 1040px;
+        margin: 0 auto;
+        padding: 64px 28px 96px;
+      }
+
+      header {
+        border-bottom: 1px solid var(--border);
+        padding-bottom: 36px;
+      }
+
+      .eyebrow {
+        color: var(--purple);
+        font-size: 12px;
+        font-weight: 800;
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+      }
+
+      h1,
+      h2,
+      h3 {
+        margin: 0;
+        color: var(--text);
+        line-height: 1.08;
+      }
+
+      h1 {
+        max-width: 860px;
+        margin-top: 12px;
+        font-size: clamp(42px, 7vw, 76px);
+        font-weight: 900;
+      }
+
+      h2 {
+        margin-top: 56px;
+        font-size: clamp(30px, 4vw, 44px);
+        font-weight: 850;
+      }
+
+      h3 {
+        margin-top: 28px;
+        font-size: 22px;
+        font-weight: 800;
+      }
+
+      p {
+        margin: 14px 0 0;
+        color: var(--muted);
+        font-size: 16px;
+      }
+
+      strong {
+        color: var(--text);
+      }
+
+      ul,
+      ol {
+        margin: 16px 0 0;
+        padding-left: 22px;
+        color: var(--muted);
+      }
+
+      li + li {
+        margin-top: 8px;
+      }
+
+      code {
+        border-radius: 7px;
+        background: #eef3e7;
+        color: var(--green);
+        padding: 2px 6px;
+        font-family: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+        font-size: 0.92em;
+      }
+
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 18px;
+        overflow: hidden;
+        border: 1px solid var(--border);
+        border-radius: 16px;
+      }
+
+      th,
+      td {
+        border-bottom: 1px solid var(--border);
+        padding: 13px 14px;
+        text-align: left;
+        vertical-align: top;
+      }
+
+      th {
+        background: var(--soft);
+        color: var(--green);
+        font-size: 13px;
+        font-weight: 850;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+      }
+
+      td {
+        color: var(--muted);
+      }
+
+      tr:last-child td {
+        border-bottom: 0;
+      }
+
+      .lead {
+        max-width: 760px;
+        margin-top: 22px;
+        font-size: 19px;
+        font-weight: 550;
+      }
+
+      .meta {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        margin-top: 28px;
+      }
+
+      .pill {
+        border: 1px solid var(--border);
+        border-radius: 999px;
+        background: var(--soft);
+        color: var(--green);
+        padding: 8px 13px;
+        font-size: 13px;
+        font-weight: 800;
+      }
+
+      .grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 16px;
+        margin-top: 22px;
+      }
+
+      .grid-3 {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 16px;
+        margin-top: 22px;
+      }
+
+      .card {
+        border: 1px solid var(--border);
+        border-radius: 18px;
+        background: var(--soft);
+        padding: 20px;
+      }
+
+      .card h3 {
+        margin-top: 0;
+      }
+
+      .accent {
+        border-color: #d9ec97;
+        background: var(--soft-strong);
+      }
+
+      .note {
+        border-left: 5px solid var(--lime);
+        background: var(--soft);
+        margin-top: 22px;
+        padding: 18px 20px;
+        border-radius: 14px;
+      }
+
+      .diagram {
+        border: 1px solid var(--border);
+        border-radius: 18px;
+        background: var(--soft);
+        margin-top: 22px;
+        padding: 18px;
+      }
+
+      .diagram img {
+        display: block;
+        width: 100%;
+        height: auto;
+        border-radius: 12px;
+        background: #ffffff;
+      }
+
+      .code {
+        border-radius: 14px;
+        background: var(--code);
+        color: #e5e7eb;
+        font-family: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+        font-size: 14px;
+        overflow-x: auto;
+        padding: 18px;
+        margin-top: 16px;
+        white-space: pre;
+      }
+
+      .footer {
+        border-top: 1px solid var(--border);
+        margin-top: 64px;
+        padding-top: 20px;
+        color: var(--muted);
+        font-size: 14px;
+      }
+
+      @media (max-width: 760px) {
+        .page {
+          padding: 42px 18px 72px;
+        }
+
+        .grid,
+        .grid-3 {
+          grid-template-columns: 1fr;
+        }
+      }
+
+      @media print {
+        body {
+          background: #ffffff;
+        }
+
+        .page {
+          max-width: none;
+          padding: 24px;
+        }
+
+        .card,
+        .note,
+        .diagram,
+        table {
+          break-inside: avoid;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main class="page">
+      <header>
+        <div class="eyebrow">Task 3</div>
+        <h1>Modelagem inicial do banco do BuildHub</h1>
+        <p class="lead">
+          Este documento registra a base conceitual do DER do MVP, incluindo
+          entidades, relacionamentos, constraints e enums sugeridos para as
+          primeiras implementações.
+        </p>
+        <div class="meta">
+          <span class="pill">PostgreSQL</span>
+          <span class="pill">Spring Data JPA</span>
+          <span class="pill">MVP</span>
+          <span class="pill">DER conceitual</span>
+        </div>
+      </header>
+
+      <section>
+        <h2>1. Diagrama de referência</h2>
+        <p>
+          A imagem abaixo é a versão atual do DER usado como base para a
+          modelagem inicial. Ela ainda pode evoluir durante a implementação, mas
+          já está madura o suficiente para orientar as entidades do MVP.
+        </p>
+        <div class="diagram">
+          <img
+            src="Captura de Tela (125).png"
+            alt="DER inicial do BuildHub com usuários, projetos, vagas, propostas, conversas, mensagens e stacks."
+          />
+        </div>
+      </section>
+
+      <section>
+        <h2>2. Visão geral</h2>
+        <div class="grid">
+          <article class="card accent">
+            <h3>Núcleo do produto</h3>
+            <ul>
+              <li>Usuários criam projetos.</li>
+              <li>Projetos possuem vagas específicas.</li>
+              <li>Usuários enviam propostas para projetos ou vagas.</li>
+              <li>Propostas geram conversas.</li>
+              <li>Conversas possuem mensagens.</li>
+            </ul>
+          </article>
+          <article class="card">
+            <h3>Stacks</h3>
+            <ul>
+              <li>Stacks ficam em um catálogo central.</li>
+              <li>Usuários podem ter várias stacks.</li>
+              <li>Projetos podem usar várias stacks.</li>
+              <li>Vagas podem exigir várias stacks.</li>
+              <li>Relacionamentos N:N usam tabelas intermediárias.</li>
+            </ul>
+          </article>
+        </div>
+      </section>
+
+      <section>
+        <h2>3. Entidades principais</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>Entidade</th>
+              <th>Responsabilidade</th>
+              <th>Campos principais</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>User</code></td>
+              <td>Representa a conta do usuário.</td>
+              <td><code>id</code>, <code>username</code>, <code>email</code>, <code>password_hash</code>, <code>created_at</code>, <code>updated_at</code></td>
+            </tr>
+            <tr>
+              <td><code>Project</code></td>
+              <td>Representa um projeto publicado por um usuário.</td>
+              <td><code>id</code>, <code>user_id</code>, <code>name</code>, <code>description</code>, <code>type</code>, <code>status</code>, <code>created_at</code>, <code>updated_at</code></td>
+            </tr>
+            <tr>
+              <td><code>Position</code></td>
+              <td>Representa uma vaga dentro de um projeto.</td>
+              <td><code>id</code>, <code>project_id</code>, <code>name</code>, <code>description</code>, <code>status</code>, <code>created_at</code>, <code>updated_at</code></td>
+            </tr>
+            <tr>
+              <td><code>Application</code></td>
+              <td>Representa uma proposta para participar de um projeto ou vaga.</td>
+              <td><code>id</code>, <code>applicant_id</code>, <code>project_id</code>, <code>position_id</code>, <code>initial_message</code>, <code>type</code>, <code>status</code>, <code>created_at</code>, <code>updated_at</code></td>
+            </tr>
+            <tr>
+              <td><code>Conversation</code></td>
+              <td>Representa a conversa criada a partir de uma proposta.</td>
+              <td><code>id</code>, <code>application_id</code>, <code>created_at</code>, <code>updated_at</code></td>
+            </tr>
+            <tr>
+              <td><code>Message</code></td>
+              <td>Representa uma mensagem dentro de uma conversa.</td>
+              <td><code>id</code>, <code>sender_id</code>, <code>conversation_id</code>, <code>content</code>, <code>created_at</code></td>
+            </tr>
+            <tr>
+              <td><code>Stack</code></td>
+              <td>Catálogo central de tecnologias, ferramentas e skills.</td>
+              <td><code>id</code>, <code>name</code>, <code>slug</code>, <code>created_at</code></td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+
+      <section>
+        <h2>4. Tabelas de relacionamento com Stack</h2>
+        <div class="grid-3">
+          <article class="card">
+            <h3>UserStack</h3>
+            <ul>
+              <li><code>id</code></li>
+              <li><code>user_id</code></li>
+              <li><code>stack_id</code></li>
+              <li><code>created_at</code></li>
+            </ul>
+          </article>
+          <article class="card accent">
+            <h3>ProjectStack</h3>
+            <ul>
+              <li><code>id</code></li>
+              <li><code>project_id</code></li>
+              <li><code>stack_id</code></li>
+              <li><code>created_at</code></li>
+            </ul>
+          </article>
+          <article class="card">
+            <h3>PositionStack</h3>
+            <ul>
+              <li><code>id</code></li>
+              <li><code>position_id</code></li>
+              <li><code>stack_id</code></li>
+              <li><code>created_at</code></li>
+            </ul>
+          </article>
+        </div>
+        <div class="note">
+          <strong>Decisão:</strong> as tabelas de junção usam <code>id</code>
+          próprio para simplificar a implementação com JPA. A prevenção de
+          duplicidade deve ser feita com constraints únicas.
+        </div>
+      </section>
+
+      <section>
+        <h2>5. Relacionamentos</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>Origem</th>
+              <th>Destino</th>
+              <th>Cardinalidade</th>
+              <th>Observação</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>User</code></td>
+              <td><code>Project</code></td>
+              <td>1:N</td>
+              <td>Um usuário pode criar vários projetos.</td>
+            </tr>
+            <tr>
+              <td><code>Project</code></td>
+              <td><code>Position</code></td>
+              <td>1:N</td>
+              <td>Um projeto pode ter várias vagas.</td>
+            </tr>
+            <tr>
+              <td><code>Project</code></td>
+              <td><code>Application</code></td>
+              <td>1:N</td>
+              <td>Um projeto pode receber várias propostas.</td>
+            </tr>
+            <tr>
+              <td><code>Position</code></td>
+              <td><code>Application</code></td>
+              <td>1:N</td>
+              <td>Uma vaga pode receber várias propostas. Em propostas gerais, <code>position_id</code> é nulo.</td>
+            </tr>
+            <tr>
+              <td><code>Application</code></td>
+              <td><code>Conversation</code></td>
+              <td>1:1</td>
+              <td>Cada proposta cria uma conversa vinculada ao mesmo contexto.</td>
+            </tr>
+            <tr>
+              <td><code>Conversation</code></td>
+              <td><code>Message</code></td>
+              <td>1:N</td>
+              <td>Uma conversa possui várias mensagens.</td>
+            </tr>
+            <tr>
+              <td><code>User</code></td>
+              <td><code>Message</code></td>
+              <td>1:N</td>
+              <td>Um usuário pode enviar várias mensagens.</td>
+            </tr>
+            <tr>
+              <td><code>Stack</code></td>
+              <td><code>UserStack</code>, <code>ProjectStack</code>, <code>PositionStack</code></td>
+              <td>1:N</td>
+              <td>Uma stack pode aparecer em vários usuários, projetos e vagas.</td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+
+      <section>
+        <h2>6. Enums sugeridos</h2>
+        <div class="grid">
+          <article class="card accent">
+            <h3>ProjectType</h3>
+            <ul>
+              <li><code>CASUAL</code>: projeto casual, estudo, portfólio ou colaboração leve.</li>
+              <li><code>SAAS</code>: produto digital com modelo SaaS.</li>
+              <li><code>STARTUP</code>: iniciativa com intenção de virar startup.</li>
+              <li><code>OPEN_SOURCE</code>: projeto aberto para contribuição pública.</li>
+              <li><code>COMMUNITY</code>: projeto voltado para comunidade.</li>
+            </ul>
+          </article>
+          <article class="card">
+            <h3>ProjectStatus</h3>
+            <ul>
+              <li><code>IDEA</code>: ideia em estruturação.</li>
+              <li><code>VALIDATING</code>: validando problema, público ou solução.</li>
+              <li><code>BUILDING</code>: em construção ativa.</li>
+              <li><code>PAUSED</code>: temporariamente pausado.</li>
+              <li><code>LAUNCHED</code>: lançado ou disponível para uso.</li>
+            </ul>
+          </article>
+          <article class="card">
+            <h3>PositionStatus</h3>
+            <ul>
+              <li><code>OPEN</code>: vaga aberta para propostas.</li>
+              <li><code>PAUSED</code>: vaga pausada temporariamente.</li>
+              <li><code>CLOSED</code>: vaga encerrada.</li>
+            </ul>
+          </article>
+          <article class="card accent">
+            <h3>ApplicationType</h3>
+            <ul>
+              <li><code>PROJECT_JOIN_REQUEST</code>: pedido geral para participar do projeto.</li>
+              <li><code>POSITION_APPLICATION</code>: proposta enviada para uma vaga específica.</li>
+            </ul>
+          </article>
+          <article class="card">
+            <h3>ApplicationStatus</h3>
+            <ul>
+              <li><code>PENDING</code>: enviada e aguardando análise.</li>
+              <li><code>ACCEPTED</code>: aceita pelo dono do projeto.</li>
+              <li><code>REJECTED</code>: recusada pelo dono do projeto.</li>
+              <li><code>CANCELLED</code>: cancelada pelo candidato.</li>
+            </ul>
+          </article>
+        </div>
+      </section>
+
+      <section>
+        <h2>7. Constraints e índices</h2>
+        <div class="grid">
+          <article class="card accent">
+            <h3>Unique constraints</h3>
+            <ul>
+              <li><code>user.email</code></li>
+              <li><code>user.username</code></li>
+              <li><code>stack.slug</code></li>
+              <li><code>user_stack(user_id, stack_id)</code></li>
+              <li><code>project_stack(project_id, stack_id)</code></li>
+              <li><code>position_stack(position_id, stack_id)</code></li>
+              <li><code>conversation.application_id</code></li>
+            </ul>
+          </article>
+          <article class="card">
+            <h3>Índices recomendados</h3>
+            <ul>
+              <li><code>project.user_id</code></li>
+              <li><code>project.status</code></li>
+              <li><code>project.type</code></li>
+              <li><code>position.project_id</code></li>
+              <li><code>position.status</code></li>
+              <li><code>application.applicant_id</code></li>
+              <li><code>application.project_id</code></li>
+              <li><code>application.position_id</code></li>
+              <li><code>message.conversation_id</code></li>
+            </ul>
+          </article>
+        </div>
+      </section>
+
+      <section>
+        <h2>8. Regras importantes</h2>
+        <ul>
+          <li><code>Application.position_id</code> deve ser opcional para permitir proposta geral para projeto.</li>
+          <li>Se <code>Application.type</code> for <code>POSITION_APPLICATION</code>, <code>position_id</code> deve ser obrigatório.</li>
+          <li>Se <code>Application.type</code> for <code>PROJECT_JOIN_REQUEST</code>, <code>position_id</code> deve ser nulo.</li>
+          <li><code>Conversation</code> deve nascer vinculada a uma <code>Application</code>.</li>
+          <li><code>Message.sender_id</code> deve apontar para o usuário que enviou a mensagem.</li>
+          <li><code>Project</code> não deve guardar stack diretamente; deve usar <code>ProjectStack</code>.</li>
+          <li><code>Position</code> não deve guardar stack diretamente; deve usar <code>PositionStack</code>.</li>
+          <li>Senha nunca deve ser armazenada como texto puro; usar apenas <code>password_hash</code>.</li>
+        </ul>
+      </section>
+
+      <section>
+        <h2>9. Pseudomodelo SQL</h2>
+        <div class="code">users
+- id
+- username unique
+- email unique
+- password_hash
+- created_at
+- updated_at
+
+projects
+- id
+- user_id
+- name
+- description
+- type
+- status
+- created_at
+- updated_at
+
+positions
+- id
+- project_id
+- name
+- description
+- status
+- created_at
+- updated_at
+
+applications
+- id
+- applicant_id
+- project_id
+- position_id nullable
+- initial_message
+- type
+- status
+- created_at
+- updated_at
+
+conversations
+- id
+- application_id unique
+- created_at
+- updated_at
+
+messages
+- id
+- sender_id
+- conversation_id
+- content
+- created_at
+
+stacks
+- id
+- name
+- slug unique
+- created_at</div>
+      </section>
+
+      <p class="footer">
+        BuildHub - Modelagem inicial do banco. Este documento deve ser revisado
+        antes da implementação das entidades JPA e das migrations.
+      </p>
+    </main>
+  </body>
+</html>
