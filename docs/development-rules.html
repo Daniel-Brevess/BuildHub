@@ -1,0 +1,698 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>BuildHub - Regras de Desenvolvimento</title>
+    <style>
+      :root {
+        --bg: #ffffff;
+        --text: #111827;
+        --muted: #5b6472;
+        --soft: #f6f8f4;
+        --soft-strong: #edf5dd;
+        --border: #dfe7d7;
+        --green: #365314;
+        --lime: #a3e635;
+        --purple: #7c3aed;
+        --code: #0f172a;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        background: var(--bg);
+        color: var(--text);
+        font-family: Inter, ui-sans-serif, system-ui, -apple-system,
+          BlinkMacSystemFont, "Segoe UI", sans-serif;
+        line-height: 1.65;
+      }
+
+      .page {
+        max-width: 1040px;
+        margin: 0 auto;
+        padding: 64px 28px 96px;
+      }
+
+      header {
+        border-bottom: 1px solid var(--border);
+        padding-bottom: 36px;
+      }
+
+      .eyebrow {
+        color: var(--purple);
+        font-size: 12px;
+        font-weight: 800;
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+      }
+
+      h1,
+      h2,
+      h3 {
+        margin: 0;
+        color: var(--text);
+        line-height: 1.08;
+      }
+
+      h1 {
+        max-width: 860px;
+        margin-top: 12px;
+        font-size: clamp(42px, 7vw, 76px);
+        font-weight: 900;
+        letter-spacing: 0;
+      }
+
+      h2 {
+        margin-top: 56px;
+        font-size: clamp(30px, 4vw, 44px);
+        font-weight: 850;
+      }
+
+      h3 {
+        margin-top: 28px;
+        font-size: 22px;
+        font-weight: 800;
+      }
+
+      p {
+        margin: 14px 0 0;
+        color: var(--muted);
+        font-size: 16px;
+      }
+
+      strong {
+        color: var(--text);
+      }
+
+      ul,
+      ol {
+        margin: 16px 0 0;
+        padding-left: 22px;
+        color: var(--muted);
+      }
+
+      li + li {
+        margin-top: 8px;
+      }
+
+      code {
+        border-radius: 7px;
+        background: #eef3e7;
+        color: var(--green);
+        padding: 2px 6px;
+        font-family: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+        font-size: 0.92em;
+      }
+
+      .lead {
+        max-width: 760px;
+        margin-top: 22px;
+        font-size: 19px;
+        font-weight: 550;
+      }
+
+      .meta {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        margin-top: 28px;
+      }
+
+      .pill {
+        border: 1px solid var(--border);
+        border-radius: 999px;
+        background: var(--soft);
+        color: var(--green);
+        padding: 8px 13px;
+        font-size: 13px;
+        font-weight: 800;
+      }
+
+      .grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 16px;
+        margin-top: 22px;
+      }
+
+      .grid-3 {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 16px;
+        margin-top: 22px;
+      }
+
+      .card {
+        border: 1px solid var(--border);
+        border-radius: 18px;
+        background: var(--soft);
+        padding: 20px;
+      }
+
+      .card h3 {
+        margin-top: 0;
+      }
+
+      .accent {
+        border-color: #d9ec97;
+        background: var(--soft-strong);
+      }
+
+      .note {
+        border-left: 5px solid var(--lime);
+        background: var(--soft);
+        margin-top: 22px;
+        padding: 18px 20px;
+        border-radius: 14px;
+      }
+
+      .code {
+        border-radius: 14px;
+        background: var(--code);
+        color: #e5e7eb;
+        font-family: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+        font-size: 14px;
+        overflow-x: auto;
+        padding: 18px;
+        margin-top: 16px;
+        white-space: pre;
+      }
+
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 18px;
+        overflow: hidden;
+        border: 1px solid var(--border);
+        border-radius: 16px;
+      }
+
+      th,
+      td {
+        border-bottom: 1px solid var(--border);
+        padding: 13px 14px;
+        text-align: left;
+        vertical-align: top;
+      }
+
+      th {
+        background: var(--soft);
+        color: var(--green);
+        font-size: 13px;
+        font-weight: 850;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+      }
+
+      td {
+        color: var(--muted);
+      }
+
+      tr:last-child td {
+        border-bottom: 0;
+      }
+
+      .footer {
+        border-top: 1px solid var(--border);
+        margin-top: 64px;
+        padding-top: 20px;
+        color: var(--muted);
+        font-size: 14px;
+      }
+
+      @media (max-width: 760px) {
+        .page {
+          padding: 42px 18px 72px;
+        }
+
+        .grid,
+        .grid-3 {
+          grid-template-columns: 1fr;
+        }
+      }
+
+      @media print {
+        body {
+          background: #ffffff;
+        }
+
+        .page {
+          max-width: none;
+          padding: 24px;
+        }
+
+        .card,
+        .note,
+        table {
+          break-inside: avoid;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main class="page">
+      <header>
+        <div class="eyebrow">Regras de Desenvolvimento</div>
+        <h1>Como o BuildHub deve ser desenvolvido</h1>
+        <p class="lead">
+          Este documento define a base prática para implementação, revisão,
+          testes, commits, segurança e deploys. A intenção é criar qualidade sem
+          transformar o desenvolvimento em burocracia.
+        </p>
+        <div class="meta">
+          <span class="pill">Qualidade</span>
+          <span class="pill">Testes</span>
+          <span class="pill">Segurança</span>
+          <span class="pill">CI/CD</span>
+        </div>
+      </header>
+
+      <section>
+        <h2>1. Princípios principais</h2>
+        <p>Toda decisão técnica deve respeitar esta ordem de prioridade:</p>
+        <div class="grid-3">
+          <article class="card accent">
+            <h3>1. Segurança</h3>
+            <p>Proteger dados, segredos, permissões e fluxos críticos.</p>
+          </article>
+          <article class="card">
+            <h3>2. Manutenibilidade</h3>
+            <p>Facilitar evolução, revisão e entendimento futuro.</p>
+          </article>
+          <article class="card">
+            <h3>3. Simplicidade</h3>
+            <p>Evitar complexidade antes de existir uma necessidade real.</p>
+          </article>
+          <article class="card">
+            <h3>4. Escalabilidade</h3>
+            <p>Preservar caminhos para crescimento sem superengenharia.</p>
+          </article>
+          <article class="card">
+            <h3>5. Performance</h3>
+            <p>Considerar custo de banco, renderização, memória e chamadas.</p>
+          </article>
+        </div>
+      </section>
+
+      <section>
+        <h2>2. Antes de implementar</h2>
+        <ul>
+          <li>Entender qual problema está sendo resolvido.</li>
+          <li>Verificar se já existe padrão parecido no projeto.</li>
+          <li>Evitar criar dependência nova sem necessidade.</li>
+          <li>Avaliar impacto em frontend, backend, banco e documentação.</li>
+          <li>Avaliar se a alteração exige teste.</li>
+          <li>Avaliar se a alteração exige atualização da documentação.</li>
+        </ul>
+      </section>
+
+      <section>
+        <h2>3. Testes</h2>
+        <div class="grid">
+          <article class="card accent">
+            <h3>Quando criar testes unitários</h3>
+            <ul>
+              <li>Regra de negócio.</li>
+              <li>Validação.</li>
+              <li>Cálculo.</li>
+              <li>Transformação de dados.</li>
+              <li>Mapper.</li>
+              <li>Service com decisão importante.</li>
+              <li>Comportamento que pode quebrar silenciosamente no futuro.</li>
+            </ul>
+          </article>
+          <article class="card">
+            <h3>Quando criar testes de integração</h3>
+            <ul>
+              <li>Controller.</li>
+              <li>Fluxo HTTP.</li>
+              <li>Banco de dados.</li>
+              <li>Repository com query customizada.</li>
+              <li>Spring Security.</li>
+              <li>Autenticação.</li>
+              <li>CORS.</li>
+              <li>Integração entre várias camadas.</li>
+            </ul>
+          </article>
+        </div>
+        <div class="note">
+          <strong>Exceções saudáveis:</strong> ajustes visuais pequenos, textos
+          estáticos, documentação e placeholders sem regra de negócio podem não
+          exigir teste imediato. Se houver risco de regressão, o teste volta a
+          ser recomendado.
+        </div>
+      </section>
+
+      <section>
+        <h2>4. Backend</h2>
+        <div class="grid">
+          <article class="card">
+            <h3>Separação esperada</h3>
+            <ul>
+              <li><code>controller</code>: recebe requisições e retorna respostas.</li>
+              <li><code>service</code>: concentra casos de uso e regras de negócio.</li>
+              <li><code>repository</code>: acessa dados.</li>
+              <li><code>entity</code>: representa tabelas e relacionamentos.</li>
+              <li><code>dto</code>: define entrada e saída da API.</li>
+              <li><code>mapper</code>: converte entre entity e DTO.</li>
+              <li><code>exception</code>, <code>config</code> e <code>security</code>: organizam aspectos técnicos.</li>
+            </ul>
+          </article>
+          <article class="card accent">
+            <h3>Regras</h3>
+            <ul>
+              <li>Controller não deve conter regra de negócio.</li>
+              <li>Controller não deve acessar repository diretamente.</li>
+              <li>Entity não deve ser exposta diretamente na API.</li>
+              <li>Service não deve devolver entity quando DTO for mais seguro.</li>
+              <li>Validações devem ser explícitas.</li>
+              <li>Exceptions devem ser previsíveis e padronizadas.</li>
+            </ul>
+          </article>
+        </div>
+      </section>
+
+      <section>
+        <h2>5. Frontend</h2>
+        <div class="grid">
+          <article class="card">
+            <h3>Estrutura esperada</h3>
+            <ul>
+              <li><code>pages/public</code>: páginas públicas.</li>
+              <li><code>pages/private</code>: páginas privadas.</li>
+              <li><code>components</code>: componentes reutilizáveis.</li>
+              <li><code>layouts</code>: estruturas de página.</li>
+              <li><code>services</code>: chamadas HTTP e integrações.</li>
+              <li><code>routes</code>: configuração de rotas.</li>
+              <li><code>utils</code>: helpers pequenos e puros.</li>
+            </ul>
+          </article>
+          <article class="card accent">
+            <h3>Regras</h3>
+            <ul>
+              <li>Evitar duplicação visual.</li>
+              <li>Manter responsividade mobile e desktop.</li>
+              <li>Manter acessibilidade básica.</li>
+              <li>Evitar chamadas HTTP espalhadas em componentes grandes.</li>
+              <li>Usar estados claros para loading, error, empty e success.</li>
+              <li>Preservar o design system oficial do BuildHub.</li>
+            </ul>
+          </article>
+        </div>
+      </section>
+
+      <section>
+        <h2>6. Nomenclatura por camada</h2>
+        <p>
+          Os nomes devem deixar claro o papel da classe ou arquivo sem exigir
+          contexto externo. A nomenclatura deve seguir a responsabilidade da
+          camada e evitar termos genéricos.
+        </p>
+        <table>
+          <thead>
+            <tr>
+              <th>Camada</th>
+              <th>Padrão</th>
+              <th>Exemplo</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Controller</td>
+              <td>Nome do recurso + <code>Controller</code></td>
+              <td><code>ProjectController</code>, <code>ApplicationController</code></td>
+            </tr>
+            <tr>
+              <td>Service</td>
+              <td>Nome do recurso/caso de uso + <code>Service</code></td>
+              <td><code>ProjectService</code>, <code>ApplicationService</code></td>
+            </tr>
+            <tr>
+              <td>Repository</td>
+              <td>Nome da entidade + <code>Repository</code></td>
+              <td><code>ProjectRepository</code>, <code>UserRepository</code></td>
+            </tr>
+            <tr>
+              <td>DTO</td>
+              <td>Nome do recurso + intenção + <code>Request</code> ou <code>Response</code></td>
+              <td><code>CreateProjectRequest</code>, <code>ProjectResponse</code></td>
+            </tr>
+            <tr>
+              <td>Entity</td>
+              <td>Nome do domínio no singular</td>
+              <td><code>User</code>, <code>Project</code>, <code>Application</code></td>
+            </tr>
+            <tr>
+              <td>Mapper</td>
+              <td>Nome do recurso + <code>Mapper</code></td>
+              <td><code>ProjectMapper</code>, <code>UserProfileMapper</code></td>
+            </tr>
+          </tbody>
+        </table>
+        <div class="note">
+          Evitar nomes como <code>Manager</code>, <code>Helper</code>,
+          <code>Util</code> ou <code>Data</code> quando o papel real puder ser
+          nomeado com mais precisão.
+        </div>
+      </section>
+
+      <section>
+        <h2>7. Banco de dados</h2>
+        <p>Antes de alterar entidades ou relacionamentos:</p>
+        <ul>
+          <li>Avaliar impacto em migrations.</li>
+          <li>Avaliar integridade dos dados.</li>
+          <li>Evitar relacionamento desnecessário.</li>
+          <li>Evitar <code>EAGER</code> sem motivo forte.</li>
+          <li>Preferir <code>LAZY</code> por padrão.</li>
+          <li>Avaliar índices para buscas importantes.</li>
+          <li>Definir campos obrigatórios com clareza.</li>
+        </ul>
+        <div class="note">
+          Campos comuns recomendados: <code>id</code>, <code>createdAt</code>,
+          <code>updatedAt</code> e <code>status</code>, quando fizer sentido.
+        </div>
+      </section>
+
+      <section>
+        <h2>8. API</h2>
+        <div class="grid">
+          <article class="card">
+            <h3>Padrões desejados</h3>
+            <ul>
+              <li>URLs claras e consistentes.</li>
+              <li>Verbos HTTP corretos.</li>
+              <li>DTOs para request e response.</li>
+              <li>Mensagens de erro padronizadas.</li>
+              <li>Respostas de sucesso previsíveis.</li>
+              <li>Validação de entrada.</li>
+              <li>Nunca retornar dados sensíveis.</li>
+            </ul>
+          </article>
+          <article class="card">
+            <h3>Resposta de erro</h3>
+            <div class="code">{
+  "message": "Mensagem clara para o erro.",
+  "code": "ERROR_CODE",
+  "field": "email"
+}</div>
+          </article>
+        </div>
+        <div class="grid">
+          <article class="card accent">
+            <h3>Resposta de sucesso</h3>
+            <div class="code">{
+  "data": {
+    "id": "uuid",
+    "title": "Nome do recurso"
+  },
+  "message": "Operação realizada com sucesso."
+}</div>
+          </article>
+          <article class="card">
+            <h3>Resposta paginada</h3>
+            <div class="code">{
+  "data": [],
+  "page": 0,
+  "size": 20,
+  "totalElements": 0,
+  "totalPages": 0
+}</div>
+          </article>
+        </div>
+        <div class="note">
+          O padrão pode evoluir durante a implementação, mas a API deve evitar
+          respostas improvisadas diferentes para cada endpoint.
+        </div>
+      </section>
+
+      <section>
+        <h2>9. Segurança</h2>
+        <div class="grid">
+          <article class="card accent">
+            <h3>Nunca commitar</h3>
+            <ul>
+              <li><code>.env</code> ou <code>.env.*</code>.</li>
+              <li><code>application-prod.properties</code>.</li>
+              <li><code>application-secrets.properties</code>.</li>
+              <li>Chaves de API.</li>
+              <li>Senhas, tokens e JWT secrets.</li>
+              <li>Credenciais.</li>
+            </ul>
+          </article>
+          <article class="card">
+            <h3>Regras</h3>
+            <ul>
+              <li>Usar variáveis de ambiente para segredos.</li>
+              <li>Validar entradas do usuário.</li>
+              <li>Não confiar no frontend para regras críticas.</li>
+              <li>Aplicar princípio do menor privilégio.</li>
+              <li>Revisar CORS e JWT antes de deploy.</li>
+            </ul>
+          </article>
+        </div>
+      </section>
+
+      <section>
+        <h2>10. Dependências e commits</h2>
+        <div class="grid">
+          <article class="card">
+            <h3>Dependências</h3>
+            <ul>
+              <li>O projeto realmente precisa disso?</li>
+              <li>Existe solução simples com o que já temos?</li>
+              <li>A dependência é mantida?</li>
+              <li>Ela aumenta risco de segurança?</li>
+              <li>Ela dificulta build ou deploy?</li>
+            </ul>
+            <p><strong>Regra padrão:</strong> menos dependências é melhor.</p>
+          </article>
+          <article class="card">
+            <h3>Conventional Commits</h3>
+            <ul>
+              <li><code>feat:</code> funcionalidades.</li>
+              <li><code>fix:</code> correções.</li>
+              <li><code>refactor:</code> refatorações.</li>
+              <li><code>docs:</code> documentação.</li>
+              <li><code>test:</code> testes.</li>
+              <li><code>chore:</code> manutenção.</li>
+            </ul>
+          </article>
+        </div>
+        <div class="code">feat: add project application workflow
+fix: prevent duplicate applications
+docs: add phase one foundation plan
+test: cover project creation rules</div>
+      </section>
+
+      <section>
+        <h2>11. Checklist antes de commit</h2>
+        <ul>
+          <li>Verificar <code>git status</code>.</li>
+          <li>Revisar diff.</li>
+          <li>Garantir que não há segredos.</li>
+          <li>Rodar testes relevantes.</li>
+          <li>Rodar lint/build quando afetar frontend.</li>
+          <li>Rodar build/testes quando afetar backend.</li>
+          <li>Confirmar que a documentação foi atualizada quando necessário.</li>
+        </ul>
+      </section>
+
+      <section>
+        <h2>12. Checklist antes de abrir ou deployar feature</h2>
+        <div class="grid">
+          <article class="card accent">
+            <h3>Antes de abrir a feature</h3>
+            <ul>
+              <li>Confirmar que o escopo foi atendido.</li>
+              <li>Revisar se houve mudança de arquitetura ou banco.</li>
+              <li>Atualizar documentação quando houver regra nova.</li>
+              <li>Garantir que validações e mensagens de erro existem.</li>
+              <li>Garantir que estados de loading, erro e vazio foram considerados no frontend.</li>
+              <li>Rodar testes, lint ou build compatíveis com a alteração.</li>
+            </ul>
+          </article>
+          <article class="card">
+            <h3>Antes de deployar</h3>
+            <ul>
+              <li>Confirmar que não há segredos no diff.</li>
+              <li>Confirmar variáveis de ambiente necessárias.</li>
+              <li>Rodar pipeline mínima ou comandos equivalentes localmente.</li>
+              <li>Revisar CORS, JWT e permissões quando a feature tocar segurança.</li>
+              <li>Garantir que migrations foram revisadas quando houver mudança no banco.</li>
+              <li>Ter um caminho claro de rollback ou correção rápida.</li>
+            </ul>
+          </article>
+        </div>
+      </section>
+
+      <section>
+        <h2>13. CI/CD e deploy</h2>
+        <p>
+          A pipeline inicial deve automatizar validações básicas, evitar deploy
+          com build quebrado e criar disciplina de entrega desde cedo.
+        </p>
+        <div class="grid">
+          <article class="card accent">
+            <h3>Pipeline desejada</h3>
+            <ul>
+              <li>Instalar dependências do frontend.</li>
+              <li>Rodar lint do frontend.</li>
+              <li>Gerar build do frontend.</li>
+              <li>Rodar testes do backend.</li>
+              <li>Gerar build do backend.</li>
+            </ul>
+          </article>
+          <article class="card">
+            <h3>Estratégia de deploy</h3>
+            <ul>
+              <li>Primeiro deploy quando cadastro e login estiverem funcionando.</li>
+              <li>Depois, seguir com desenvolvimento local e entregas frequentes.</li>
+              <li>Cada deploy deve passar por validação mínima automatizada.</li>
+            </ul>
+          </article>
+        </div>
+      </section>
+
+      <section>
+        <h2>14. Documentação durante o desenvolvimento</h2>
+        <div class="grid">
+          <article class="card accent">
+            <h3>Documentar sempre</h3>
+            <ul>
+              <li>Decisões de arquitetura.</li>
+              <li>Mudanças no modelo de dados.</li>
+              <li>Regras de negócio.</li>
+              <li>Fluxos importantes.</li>
+              <li>Configurações de segurança.</li>
+              <li>Variáveis de ambiente necessárias.</li>
+              <li>Como rodar, testar e fazer deploy.</li>
+            </ul>
+          </article>
+          <article class="card">
+            <h3>Evitar documentar demais</h3>
+            <ul>
+              <li>Cada pequeno ajuste visual.</li>
+              <li>Cada nome de variável.</li>
+              <li>Implementações óbvias.</li>
+              <li>Detalhes que o código já explica bem.</li>
+            </ul>
+          </article>
+        </div>
+        <div class="note">
+          <strong>Regra prática:</strong> documente o que ajuda uma pessoa futura
+          a entender decisões, fluxos e riscos.
+        </div>
+      </section>
+
+      <p class="footer">
+        BuildHub - Regras de desenvolvimento. Este arquivo deve ser revisado a
+        cada fase importante do projeto.
+      </p>
+    </main>
+  </body>
+</html>

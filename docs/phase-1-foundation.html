@@ -1,0 +1,565 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>BuildHub - Fase 1: Fundação Técnica</title>
+    <style>
+      :root {
+        --bg: #ffffff;
+        --text: #111827;
+        --muted: #5b6472;
+        --soft: #f6f8f4;
+        --soft-strong: #edf5dd;
+        --border: #dfe7d7;
+        --green: #365314;
+        --lime: #a3e635;
+        --purple: #7c3aed;
+        --code: #0f172a;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        background: var(--bg);
+        color: var(--text);
+        font-family: Inter, ui-sans-serif, system-ui, -apple-system,
+          BlinkMacSystemFont, "Segoe UI", sans-serif;
+        line-height: 1.65;
+      }
+
+      .page {
+        max-width: 1040px;
+        margin: 0 auto;
+        padding: 64px 28px 96px;
+      }
+
+      header {
+        border-bottom: 1px solid var(--border);
+        padding-bottom: 36px;
+      }
+
+      .eyebrow {
+        color: var(--purple);
+        font-size: 12px;
+        font-weight: 800;
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+      }
+
+      h1,
+      h2,
+      h3 {
+        margin: 0;
+        color: var(--text);
+        line-height: 1.08;
+      }
+
+      h1 {
+        max-width: 860px;
+        margin-top: 12px;
+        font-size: clamp(42px, 7vw, 76px);
+        font-weight: 900;
+        letter-spacing: 0;
+      }
+
+      h2 {
+        margin-top: 56px;
+        font-size: clamp(30px, 4vw, 44px);
+        font-weight: 850;
+      }
+
+      h3 {
+        margin-top: 28px;
+        font-size: 22px;
+        font-weight: 800;
+      }
+
+      p {
+        margin: 14px 0 0;
+        color: var(--muted);
+        font-size: 16px;
+      }
+
+      strong {
+        color: var(--text);
+      }
+
+      ul,
+      ol {
+        margin: 16px 0 0;
+        padding-left: 22px;
+        color: var(--muted);
+      }
+
+      li + li {
+        margin-top: 8px;
+      }
+
+      code {
+        border-radius: 7px;
+        background: #eef3e7;
+        color: var(--green);
+        padding: 2px 6px;
+        font-family: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+        font-size: 0.92em;
+      }
+
+      .lead {
+        max-width: 760px;
+        margin-top: 22px;
+        font-size: 19px;
+        font-weight: 550;
+      }
+
+      .meta {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        margin-top: 28px;
+      }
+
+      .pill {
+        border: 1px solid var(--border);
+        border-radius: 999px;
+        background: var(--soft);
+        color: var(--green);
+        padding: 8px 13px;
+        font-size: 13px;
+        font-weight: 800;
+      }
+
+      .grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 16px;
+        margin-top: 22px;
+      }
+
+      .grid-3 {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 16px;
+        margin-top: 22px;
+      }
+
+      .card {
+        border: 1px solid var(--border);
+        border-radius: 18px;
+        background: var(--soft);
+        padding: 20px;
+      }
+
+      .card h3 {
+        margin-top: 0;
+      }
+
+      .accent {
+        border-color: #d9ec97;
+        background: var(--soft-strong);
+      }
+
+      .note {
+        border-left: 5px solid var(--lime);
+        background: var(--soft);
+        margin-top: 22px;
+        padding: 18px 20px;
+        border-radius: 14px;
+      }
+
+      .timeline {
+        display: grid;
+        gap: 14px;
+        margin-top: 22px;
+      }
+
+      .step {
+        display: grid;
+        grid-template-columns: 120px 1fr;
+        gap: 18px;
+        border: 1px solid var(--border);
+        border-radius: 18px;
+        padding: 18px;
+      }
+
+      .step-label {
+        color: var(--green);
+        font-weight: 900;
+      }
+
+      .footer {
+        border-top: 1px solid var(--border);
+        margin-top: 64px;
+        padding-top: 20px;
+        color: var(--muted);
+        font-size: 14px;
+      }
+
+      @media (max-width: 760px) {
+        .page {
+          padding: 42px 18px 72px;
+        }
+
+        .grid,
+        .grid-3 {
+          grid-template-columns: 1fr;
+        }
+
+        .step {
+          grid-template-columns: 1fr;
+        }
+      }
+
+      @media print {
+        body {
+          background: #ffffff;
+        }
+
+        .page {
+          max-width: none;
+          padding: 24px;
+        }
+
+        .card,
+        .note,
+        .step {
+          break-inside: avoid;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main class="page">
+      <header>
+        <div class="eyebrow">Fase 1</div>
+        <h1>Fundação técnica do BuildHub</h1>
+        <p class="lead">
+          Esta fase define a estrutura de páginas, arquitetura base, modelo
+          inicial do banco, regras de desenvolvimento, estratégia de testes e
+          preparação para CI/CD. O foco é criar uma base sólida antes de entrar
+          em autenticação, JWT e CORS.
+        </p>
+        <div class="meta">
+          <span class="pill">Documentação viva</span>
+          <span class="pill">Base técnica</span>
+          <span class="pill">React + Spring Boot</span>
+          <span class="pill">PostgreSQL</span>
+        </div>
+      </header>
+
+      <section>
+        <h2>1. Objetivo da fase</h2>
+        <p>
+          A Fase 1 é a base técnica do BuildHub. Nesta etapa, o objetivo não é
+          implementar cadastro, login, JWT, CORS ou fluxos completos de usuário.
+          O foco é deixar o projeto preparado para crescer com clareza,
+          consistência e segurança.
+        </p>
+        <div class="grid">
+          <article class="card accent">
+            <h3>Esta fase deve responder</h3>
+            <ul>
+              <li>Quais páginas o produto precisa ter no MVP.</li>
+              <li>Como o frontend será organizado.</li>
+              <li>Como o backend será organizado.</li>
+              <li>Quais entidades principais existirão no banco.</li>
+              <li>Quais regras de desenvolvimento serão seguidas.</li>
+              <li>Como testes e CI/CD serão introduzidos no projeto.</li>
+            </ul>
+          </article>
+          <article class="card">
+            <h3>Fora deste momento</h3>
+            <p>
+              Autenticação real, regras de permissão, chat funcional, publicação
+              real de projetos, propostas e assinatura entram nas próximas fases.
+            </p>
+          </article>
+        </div>
+      </section>
+
+      <section>
+        <h2>2. O que entra na Fase 1</h2>
+        <div class="timeline">
+          <div class="step">
+            <div class="step-label">Task 1<br />Completa</div>
+            <div>
+              <h3>Regras de desenvolvimento</h3>
+              <p>
+                Criar uma base documentada para guiar implementação, revisão,
+                testes, commits e deploys.
+              </p>
+              <ul>
+                <li>Definir quando criar testes unitários.</li>
+                <li>Definir quando criar testes de integração.</li>
+                <li>Definir padrão de commits com Conventional Commits.</li>
+                <li>Definir checklist antes de commit.</li>
+                <li>Definir regras para banco de dados e dependências.</li>
+                <li>Definir padrão para respostas de API e tratamento de erros.</li>
+              </ul>
+              <div class="note">
+                <strong>Status:</strong> concluída em
+                <code>docs/development-rules.html</code>.
+              </div>
+            </div>
+          </div>
+
+          <div class="step">
+            <div class="step-label">Task 2</div>
+            <div>
+              <h3>Estrutura de páginas</h3>
+              <p>
+                Mapear páginas públicas e privadas do MVP, mesmo que algumas
+                comecem como placeholders.
+              </p>
+              <ul>
+                <li>Listar páginas públicas e privadas.</li>
+                <li>Definir rotas principais.</li>
+                <li>Separar páginas institucionais de páginas do produto.</li>
+                <li>Definir layout base da área logada.</li>
+                <li>Definir navegação principal da área privada.</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="step">
+            <div class="step-label">Task 3</div>
+            <div>
+              <h3>Estrutura inicial do banco</h3>
+              <p>
+                Definir o modelo conceitual antes de criar entidades JPA e
+                migrations.
+              </p>
+              <ul>
+                <li>Definir entidades principais.</li>
+                <li>Definir relacionamentos.</li>
+                <li>Definir campos obrigatórios e opcionais.</li>
+                <li>Definir enums, índices e campos de auditoria.</li>
+                <li>Avaliar impacto de cada relacionamento.</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="step">
+            <div class="step-label">Task 4</div>
+            <div>
+              <h3>Arquitetura do backend</h3>
+              <p>
+                Organizar responsabilidades para evitar controllers com regra de
+                negócio e entidades expostas diretamente na API.
+              </p>
+              <ul>
+                <li>Revisar estrutura atual de pacotes.</li>
+                <li>Definir padrão para controller, service e repository.</li>
+                <li>Definir estratégia de DTOs, mappers e exceptions.</li>
+                <li>Definir onde ficam validações e regras de negócio.</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="step">
+            <div class="step-label">Task 5</div>
+            <div>
+              <h3>Arquitetura do frontend</h3>
+              <p>
+                Preparar o React para crescer com páginas, layouts, componentes,
+                services e estados previsíveis.
+              </p>
+              <ul>
+                <li>Revisar estrutura atual do frontend.</li>
+                <li>Definir páginas públicas e privadas.</li>
+                <li>Definir componentes compartilhados.</li>
+                <li>Definir padrão para chamadas HTTP.</li>
+                <li>Definir loading, error, empty e success states.</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="step">
+            <div class="step-label">Task 6</div>
+            <div>
+              <h3>Preparação para testes</h3>
+              <p>
+                Definir como JUnit e testes de integração serão usados antes das
+                funcionalidades críticas.
+              </p>
+              <ul>
+                <li>Definir quando usar teste unitário.</li>
+                <li>Definir quando usar teste de integração.</li>
+                <li>Definir padrão de nomes dos testes.</li>
+                <li>Definir estrutura de pastas de teste no backend.</li>
+                <li>Definir primeiro teste simples de sanidade.</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="step">
+            <div class="step-label">Task 7</div>
+            <div>
+              <h3>Preparação para CI/CD</h3>
+              <p>
+                Definir a pipeline mínima que vai proteger o projeto antes do
+                primeiro deploy real.
+              </p>
+              <ul>
+                <li>Definir comandos de build do backend e frontend.</li>
+                <li>Definir comando de lint do frontend.</li>
+                <li>Definir variáveis de ambiente necessárias.</li>
+                <li>Definir critério mínimo para deploy.</li>
+                <li>Definir estratégia para deploy após cadastro e login.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section>
+        <h2>3. Mapa inicial de páginas</h2>
+        <div class="grid">
+          <article class="card accent">
+            <h3>Páginas públicas</h3>
+            <ul>
+              <li>Landing page.</li>
+              <li>Sobre nós.</li>
+              <li>Assinaturas.</li>
+              <li>Cadastro.</li>
+              <li>Login.</li>
+            </ul>
+          </article>
+          <article class="card">
+            <h3>Páginas privadas</h3>
+            <ul>
+              <li>Feed de projetos.</li>
+              <li>Detalhe do projeto.</li>
+              <li>Criar e editar projeto.</li>
+              <li>Criar e detalhar vaga.</li>
+              <li>Propostas enviadas e recebidas.</li>
+              <li>Mensagens.</li>
+              <li>Perfil e configurações da conta.</li>
+            </ul>
+          </article>
+        </div>
+      </section>
+
+      <section>
+        <h2>4. Modelo conceitual do banco</h2>
+        <div class="grid">
+          <article class="card">
+            <h3>Entidades prováveis</h3>
+            <ul>
+              <li>User.</li>
+              <li>UserProfile.</li>
+              <li>Project.</li>
+              <li>ProjectRole ou ProjectPosition.</li>
+              <li>Application.</li>
+              <li>Conversation.</li>
+              <li>Message.</li>
+              <li>SubscriptionPlan.</li>
+            </ul>
+          </article>
+          <article class="card">
+            <h3>Relacionamentos prováveis</h3>
+            <ul>
+              <li>Um usuário possui um perfil.</li>
+              <li>Um usuário pode criar vários projetos.</li>
+              <li>Um projeto possui várias vagas.</li>
+              <li>Uma vaga recebe várias propostas.</li>
+              <li>Uma conversa pode nascer a partir de uma proposta.</li>
+              <li>Uma conversa possui várias mensagens.</li>
+            </ul>
+          </article>
+        </div>
+      </section>
+
+      <section>
+        <h2>5. Arquitetura esperada</h2>
+        <div class="grid">
+          <article class="card">
+            <h3>Backend</h3>
+            <ul>
+              <li><code>controller</code>: recebe requisições e retorna respostas.</li>
+              <li><code>service</code>: concentra casos de uso e regras.</li>
+              <li><code>repository</code>: isola persistência.</li>
+              <li><code>entity</code>: representa tabelas e relacionamentos.</li>
+              <li><code>dto</code> e <code>mapper</code>: protegem a API.</li>
+              <li><code>exception</code>, <code>config</code> e <code>security</code>: organizam aspectos técnicos.</li>
+            </ul>
+          </article>
+          <article class="card">
+            <h3>Frontend</h3>
+            <ul>
+              <li><code>pages/public</code>: páginas públicas.</li>
+              <li><code>pages/private</code>: páginas privadas.</li>
+              <li><code>components</code>: componentes reutilizáveis.</li>
+              <li><code>layouts</code>: estruturas de página.</li>
+              <li><code>services</code>: chamadas HTTP e integrações.</li>
+              <li><code>routes</code> e <code>utils</code>: rotas e helpers.</li>
+            </ul>
+          </article>
+        </div>
+      </section>
+
+      <section>
+        <h2>6. O que não entra na Fase 1</h2>
+        <div class="grid-3">
+          <article class="card">
+            <h3>Autenticação</h3>
+            <ul>
+              <li>Cadastro funcional.</li>
+              <li>Login funcional.</li>
+              <li>JWT.</li>
+              <li>Refresh token.</li>
+              <li>Recuperação de senha.</li>
+            </ul>
+          </article>
+          <article class="card">
+            <h3>Produto</h3>
+            <ul>
+              <li>Chat funcional.</li>
+              <li>Publicação real de projetos.</li>
+              <li>Envio real de propostas.</li>
+              <li>Sistema de assinatura.</li>
+            </ul>
+          </article>
+          <article class="card">
+            <h3>Segurança aplicada</h3>
+            <ul>
+              <li>CORS em ambiente real.</li>
+              <li>Controle completo de permissões.</li>
+              <li>Proteção final de rotas privadas.</li>
+            </ul>
+          </article>
+        </div>
+      </section>
+
+      <section>
+        <h2>7. Critérios de conclusão</h2>
+        <ul>
+          <li>Regras de desenvolvimento documentadas.</li>
+          <li>Mapa de páginas públicas e privadas definido.</li>
+          <li>Estrutura de rotas planejada.</li>
+          <li>Modelo conceitual do banco definido.</li>
+          <li>Entidades principais mapeadas em nível documental.</li>
+          <li>Arquitetura do backend definida.</li>
+          <li>Arquitetura do frontend definida.</li>
+          <li>Estratégia de testes documentada.</li>
+          <li>Estratégia inicial de CI/CD documentada.</li>
+          <li>Documentação técnica alinhada com a divisão de fases.</li>
+        </ul>
+        <div class="note">
+          <strong>Nota estratégica:</strong> esta fase parece menos empolgante
+          que implementar telas e login, mas reduz muito retrabalho depois. Ela
+          cria o trilho para que a Fase 2, autenticação e usuários, seja feita
+          com mais segurança e aprendizado real sobre JUnit, JWT, CORS e CI/CD.
+        </div>
+      </section>
+
+      <p class="footer">
+        BuildHub - Fase 1: fundação técnica. Este arquivo foi pensado para ser
+        editado como HTML e exportado para PDF quando necessário.
+      </p>
+    </main>
+  </body>
+</html>
