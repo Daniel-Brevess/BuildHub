@@ -1,0 +1,717 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>BuildHub - Arquitetura do Frontend</title>
+    <style>
+      :root {
+        --bg: #ffffff;
+        --text: #111827;
+        --muted: #5b6472;
+        --soft: #f6f8f4;
+        --soft-strong: #edf5dd;
+        --border: #dfe7d7;
+        --green: #365314;
+        --lime: #a3e635;
+        --purple: #7c3aed;
+        --code: #0f172a;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        background: var(--bg);
+        color: var(--text);
+        font-family: Inter, ui-sans-serif, system-ui, -apple-system,
+          BlinkMacSystemFont, "Segoe UI", sans-serif;
+        line-height: 1.65;
+      }
+
+      .page {
+        max-width: 1040px;
+        margin: 0 auto;
+        padding: 64px 28px 96px;
+      }
+
+      header {
+        border-bottom: 1px solid var(--border);
+        padding-bottom: 36px;
+      }
+
+      .eyebrow {
+        color: var(--purple);
+        font-size: 12px;
+        font-weight: 800;
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+      }
+
+      h1,
+      h2,
+      h3 {
+        margin: 0;
+        color: var(--text);
+        line-height: 1.08;
+      }
+
+      h1 {
+        max-width: 860px;
+        margin-top: 12px;
+        font-size: clamp(42px, 7vw, 76px);
+        font-weight: 900;
+      }
+
+      h2 {
+        margin-top: 56px;
+        font-size: clamp(30px, 4vw, 44px);
+        font-weight: 850;
+      }
+
+      h3 {
+        margin-top: 28px;
+        font-size: 22px;
+        font-weight: 800;
+      }
+
+      p {
+        margin: 14px 0 0;
+        color: var(--muted);
+        font-size: 16px;
+      }
+
+      strong {
+        color: var(--text);
+      }
+
+      ul,
+      ol {
+        margin: 16px 0 0;
+        padding-left: 22px;
+        color: var(--muted);
+      }
+
+      li + li {
+        margin-top: 8px;
+      }
+
+      code {
+        border-radius: 7px;
+        background: #eef3e7;
+        color: var(--green);
+        padding: 2px 6px;
+        font-family: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+        font-size: 0.92em;
+      }
+
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 18px;
+        overflow: hidden;
+        border: 1px solid var(--border);
+        border-radius: 16px;
+      }
+
+      th,
+      td {
+        border-bottom: 1px solid var(--border);
+        padding: 13px 14px;
+        text-align: left;
+        vertical-align: top;
+      }
+
+      th {
+        background: var(--soft);
+        color: var(--green);
+        font-size: 13px;
+        font-weight: 850;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+      }
+
+      td {
+        color: var(--muted);
+      }
+
+      tr:last-child td {
+        border-bottom: 0;
+      }
+
+      .lead {
+        max-width: 760px;
+        margin-top: 22px;
+        font-size: 19px;
+        font-weight: 550;
+      }
+
+      .meta {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        margin-top: 28px;
+      }
+
+      .pill {
+        border: 1px solid var(--border);
+        border-radius: 999px;
+        background: var(--soft);
+        color: var(--green);
+        padding: 8px 13px;
+        font-size: 13px;
+        font-weight: 800;
+      }
+
+      .grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 16px;
+        margin-top: 22px;
+      }
+
+      .grid-3 {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 16px;
+        margin-top: 22px;
+      }
+
+      .card {
+        border: 1px solid var(--border);
+        border-radius: 18px;
+        background: var(--soft);
+        padding: 20px;
+      }
+
+      .card h3 {
+        margin-top: 0;
+      }
+
+      .accent {
+        border-color: #d9ec97;
+        background: var(--soft-strong);
+      }
+
+      .note {
+        border-left: 5px solid var(--lime);
+        background: var(--soft);
+        margin-top: 22px;
+        padding: 18px 20px;
+        border-radius: 14px;
+      }
+
+      .code {
+        border-radius: 14px;
+        background: var(--code);
+        color: #e5e7eb;
+        font-family: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+        font-size: 14px;
+        overflow-x: auto;
+        padding: 18px;
+        margin-top: 16px;
+        white-space: pre;
+      }
+
+      .flow {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        margin-top: 18px;
+      }
+
+      .node {
+        border: 1px solid var(--border);
+        border-radius: 999px;
+        background: #ffffff;
+        color: var(--green);
+        padding: 9px 13px;
+        font-size: 13px;
+        font-weight: 850;
+      }
+
+      .footer {
+        border-top: 1px solid var(--border);
+        margin-top: 64px;
+        padding-top: 20px;
+        color: var(--muted);
+        font-size: 14px;
+      }
+
+      @media (max-width: 760px) {
+        .page {
+          padding: 42px 18px 72px;
+        }
+
+        .grid,
+        .grid-3 {
+          grid-template-columns: 1fr;
+        }
+      }
+
+      @media print {
+        body {
+          background: #ffffff;
+        }
+
+        .page {
+          max-width: none;
+          padding: 24px;
+        }
+
+        .card,
+        .note,
+        table {
+          break-inside: avoid;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main class="page">
+      <header>
+        <div class="eyebrow">Task 5</div>
+        <h1>Arquitetura do frontend do BuildHub</h1>
+        <p class="lead">
+          Este documento define a organização oficial do frontend React, incluindo
+          estrutura de pastas, rotas, layouts, componentes compartilhados,
+          services, estados de tela, formulários e preparação para autenticação.
+        </p>
+        <div class="meta">
+          <span class="pill">React</span>
+          <span class="pill">Vite</span>
+          <span class="pill">Tailwind CSS</span>
+          <span class="pill">React Router</span>
+        </div>
+      </header>
+
+      <section>
+        <h2>1. Estado atual</h2>
+        <p>
+          O frontend já possui páginas públicas, páginas privadas estáticas,
+          assets e rotas principais. A Task 5 formaliza como essa base deve
+          crescer quando o MVP deixar de ser apenas visual.
+        </p>
+        <div class="grid">
+          <article class="card accent">
+            <h3>Estrutura existente</h3>
+            <ul>
+              <li><code>src/pages/public</code></li>
+              <li><code>src/pages/private</code></li>
+              <li><code>src/assets</code></li>
+              <li><code>src/routes.jsx</code></li>
+              <li><code>src/index.css</code></li>
+              <li><code>src/App.jsx</code></li>
+            </ul>
+          </article>
+          <article class="card">
+            <h3>Estrutura a criar conforme necessidade</h3>
+            <ul>
+              <li><code>src/components</code></li>
+              <li><code>src/layouts</code></li>
+              <li><code>src/services</code></li>
+              <li><code>src/utils</code></li>
+              <li><code>src/hooks</code></li>
+              <li><code>src/constants</code></li>
+            </ul>
+          </article>
+        </div>
+        <div class="note">
+          <strong>Decisão:</strong> não criar pastas vazias ou abstrações sem uso.
+          A estrutura deve ser criada quando o primeiro componente, layout,
+          service, hook ou helper real aparecer.
+        </div>
+      </section>
+
+      <section>
+        <h2>2. Estrutura oficial de pastas</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>Pasta/arquivo</th>
+              <th>Responsabilidade</th>
+              <th>Exemplos</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>pages/public</code></td>
+              <td>Páginas acessíveis sem login.</td>
+              <td><code>LandingPage</code>, <code>AboutPage</code>, <code>LoginPage</code></td>
+            </tr>
+            <tr>
+              <td><code>pages/private</code></td>
+              <td>Páginas da área logada.</td>
+              <td><code>DashboardPage</code>, <code>ProfilePage</code>, <code>SearchPage</code></td>
+            </tr>
+            <tr>
+              <td><code>components</code></td>
+              <td>Componentes reutilizáveis e independentes de rota.</td>
+              <td><code>Button</code>, <code>Input</code>, <code>ProjectCard</code></td>
+            </tr>
+            <tr>
+              <td><code>layouts</code></td>
+              <td>Estruturas de página compartilhadas.</td>
+              <td><code>PublicLayout</code>, <code>PrivateLayout</code>, <code>AuthLayout</code></td>
+            </tr>
+            <tr>
+              <td><code>services</code></td>
+              <td>Chamadas HTTP e integração com a API.</td>
+              <td><code>apiClient</code>, <code>projectService</code></td>
+            </tr>
+            <tr>
+              <td><code>utils</code></td>
+              <td>Funções puras e pequenas.</td>
+              <td><code>formatDate</code>, <code>buildQueryString</code></td>
+            </tr>
+            <tr>
+              <td><code>hooks</code></td>
+              <td>Hooks reutilizáveis com estado ou efeitos.</td>
+              <td><code>useAuth</code>, <code>useDebouncedValue</code></td>
+            </tr>
+            <tr>
+              <td><code>constants</code></td>
+              <td>Constantes compartilhadas pelo frontend.</td>
+              <td><code>routes</code>, <code>projectTypes</code>, <code>applicationStatus</code></td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+
+      <section>
+        <h2>3. Rotas</h2>
+        <p>
+          As rotas devem continuar centralizadas em <code>src/routes.jsx</code>
+          enquanto o projeto estiver simples. Quando auth real entrar, as rotas
+          privadas devem ser protegidas por um wrapper ou loader equivalente.
+        </p>
+        <div class="grid">
+          <article class="card">
+            <h3>Públicas</h3>
+            <ul>
+              <li><code>/</code></li>
+              <li><code>/about</code></li>
+              <li><code>/assinaturas</code></li>
+              <li><code>/login</code></li>
+              <li><code>/cadastro</code></li>
+              <li><code>/privacidade</code> futura</li>
+            </ul>
+          </article>
+          <article class="card accent">
+            <h3>Privadas</h3>
+            <ul>
+              <li><code>/app/dashboard</code></li>
+              <li><code>/app/pesquisa</code></li>
+              <li><code>/app/perfil</code></li>
+              <li><code>/app/perfil/editar</code> futura</li>
+              <li><code>/app/conversas</code> futura, se o painel virar página</li>
+            </ul>
+          </article>
+        </div>
+        <div class="note">
+          <strong>Fase 2:</strong> criar proteção para rotas privadas, redirecionar
+          usuários não autenticados para <code>/login</code> e evitar acesso à
+          área privada sem sessão válida.
+        </div>
+      </section>
+
+      <section>
+        <h2>4. Layouts</h2>
+        <p>
+          Layouts devem evitar duplicação de estrutura entre páginas. Eles devem
+          cuidar da moldura da página, não da regra de negócio.
+        </p>
+        <div class="grid-3">
+          <article class="card accent">
+            <h3>PublicLayout</h3>
+            <ul>
+              <li>Header público.</li>
+              <li>Links institucionais.</li>
+              <li>Toggle de tema quando aplicável.</li>
+              <li>Footer futuro.</li>
+            </ul>
+          </article>
+          <article class="card">
+            <h3>AuthLayout</h3>
+            <ul>
+              <li>Usado por login e cadastro.</li>
+              <li>Logo e botão de voltar.</li>
+              <li>Área visual lateral ou hero simples.</li>
+              <li>Formulário centralizado.</li>
+            </ul>
+          </article>
+          <article class="card">
+            <h3>PrivateLayout</h3>
+            <ul>
+              <li>Sidebar privada.</li>
+              <li>Área principal.</li>
+              <li>Header privado ou saudação.</li>
+              <li>Painéis contextuais, como conversas.</li>
+            </ul>
+          </article>
+        </div>
+      </section>
+
+      <section>
+        <h2>5. Componentes compartilhados</h2>
+        <p>
+          Componentes devem ser extraídos quando houver repetição real, quando a
+          página ficar difícil de ler ou quando um padrão visual precisar ser
+          consistente.
+        </p>
+        <div class="grid">
+          <article class="card accent">
+            <h3>Componentes base</h3>
+            <ul>
+              <li><code>Button</code></li>
+              <li><code>IconButton</code></li>
+              <li><code>Input</code></li>
+              <li><code>Textarea</code></li>
+              <li><code>Select</code></li>
+              <li><code>Badge</code></li>
+              <li><code>Modal</code></li>
+            </ul>
+          </article>
+          <article class="card">
+            <h3>Componentes de produto</h3>
+            <ul>
+              <li><code>ProjectCard</code></li>
+              <li><code>PositionCard</code></li>
+              <li><code>ApplicationCard</code></li>
+              <li><code>ConversationPanel</code></li>
+              <li><code>PrivateSidebar</code></li>
+              <li><code>ProfileSummary</code></li>
+              <li><code>StackBadgeList</code></li>
+            </ul>
+          </article>
+        </div>
+        <div class="note">
+          <strong>Regra:</strong> não criar biblioteca de componentes grande cedo
+          demais. Primeiro repetir uma ou duas vezes, depois extrair com base em
+          necessidade real.
+        </div>
+      </section>
+
+      <section>
+        <h2>6. Services e API</h2>
+        <p>
+          Chamadas HTTP devem ficar fora de componentes grandes. Componentes
+          chamam services ou hooks, e services lidam com endpoints.
+        </p>
+        <div class="grid">
+          <article class="card">
+            <h3>Services planejados</h3>
+            <ul>
+              <li><code>apiClient</code></li>
+              <li><code>authService</code></li>
+              <li><code>projectService</code></li>
+              <li><code>positionService</code></li>
+              <li><code>applicationService</code></li>
+              <li><code>conversationService</code></li>
+              <li><code>stackService</code></li>
+            </ul>
+          </article>
+          <article class="card accent">
+            <h3>Responsabilidades</h3>
+            <ul>
+              <li>Montar URLs e query params.</li>
+              <li>Enviar headers necessários.</li>
+              <li>Interpretar resposta da API.</li>
+              <li>Propagar erro padronizado para a UI.</li>
+              <li>Evitar duplicação de chamadas HTTP.</li>
+            </ul>
+          </article>
+        </div>
+        <div class="code">services/
+- apiClient.js
+- authService.js
+- projectService.js
+- positionService.js
+- applicationService.js
+- conversationService.js
+- stackService.js</div>
+      </section>
+
+      <section>
+        <h2>7. Estados de tela</h2>
+        <p>
+          Toda tela que consome API deve considerar estados explícitos para que a
+          experiência não quebre quando a rede, os dados ou permissões mudarem.
+        </p>
+        <div class="grid">
+          <article class="card accent">
+            <h3>Estados obrigatórios</h3>
+            <ul>
+              <li><code>loading</code>: carregando dados ou enviando ação.</li>
+              <li><code>error</code>: falha na requisição ou regra de negócio.</li>
+              <li><code>empty</code>: resposta válida sem dados.</li>
+              <li><code>success</code>: ação concluída.</li>
+              <li><code>unauthorized</code>: usuário sem sessão ou permissão.</li>
+            </ul>
+          </article>
+          <article class="card">
+            <h3>Componentes sugeridos</h3>
+            <ul>
+              <li><code>LoadingState</code></li>
+              <li><code>ErrorState</code></li>
+              <li><code>EmptyState</code></li>
+              <li><code>SuccessMessage</code></li>
+              <li><code>InlineFieldError</code></li>
+            </ul>
+          </article>
+        </div>
+      </section>
+
+      <section>
+        <h2>8. Formulários</h2>
+        <p>
+          Formulários devem ser previsíveis, acessíveis e preparados para
+          validações do backend. No MVP, não é necessário adicionar biblioteca de
+          formulário antes de sentir dor real.
+        </p>
+        <ul>
+          <li>Todo input deve ter label acessível, visível ou <code>sr-only</code>.</li>
+          <li>Erros de campo devem aparecer próximos ao campo.</li>
+          <li>Botão de submit deve indicar carregamento quando houver API.</li>
+          <li>Dados enviados devem seguir os DTOs do backend.</li>
+          <li>Validação visual no frontend não substitui validação no backend.</li>
+        </ul>
+        <div class="code">Formulários previstos:
+- Login
+- Cadastro
+- Criar projeto
+- Editar projeto
+- Criar vaga
+- Enviar proposta
+- Editar perfil</div>
+      </section>
+
+      <section>
+        <h2>9. Hooks</h2>
+        <p>
+          Hooks devem ser usados para reaproveitar comportamento, não apenas para
+          mover código de lugar. Eles são úteis quando uma regra de interface se
+          repete em mais de uma tela.
+        </p>
+        <div class="grid">
+          <article class="card">
+            <h3>Hooks futuros</h3>
+            <ul>
+              <li><code>useAuth</code></li>
+              <li><code>useCurrentUser</code></li>
+              <li><code>useDebouncedValue</code></li>
+              <li><code>useOutsideClick</code></li>
+              <li><code>useColorMode</code></li>
+            </ul>
+          </article>
+          <article class="card accent">
+            <h3>Critério de criação</h3>
+            <ul>
+              <li>Criar quando houver repetição real.</li>
+              <li>Manter API pequena.</li>
+              <li>Evitar hook genérico demais.</li>
+              <li>Testar quando houver regra relevante.</li>
+            </ul>
+          </article>
+        </div>
+      </section>
+
+      <section>
+        <h2>10. Tema e design system</h2>
+        <p>
+          O BuildHub já tem uma identidade visual mais expressiva, com verde
+          escuro, cards claros, acentos em verde limão e rosa suave. O frontend
+          deve preservar essa direção enquanto mantém consistência, contraste e
+          legibilidade.
+        </p>
+        <ul>
+          <li>Usar componentes consistentes para botões, inputs e cards.</li>
+          <li>Evitar estilos únicos criados apenas para uma tela sem necessidade.</li>
+          <li>Preservar responsividade mobile e desktop.</li>
+          <li>Garantir que texto não estoure containers.</li>
+          <li>Manter foco visível em elementos interativos.</li>
+          <li>Usar ícones de <code>lucide-react</code> quando fizer sentido.</li>
+        </ul>
+      </section>
+
+      <section>
+        <h2>11. Autenticação futura</h2>
+        <p>
+          JWT, login real, logout e proteção de rotas entram na Fase 2. A
+          arquitetura frontend deve apenas reservar o caminho para isso.
+        </p>
+        <div class="grid">
+          <article class="card accent">
+            <h3>Peças futuras</h3>
+            <ul>
+              <li><code>authService</code></li>
+              <li><code>useAuth</code></li>
+              <li><code>PrivateRoute</code> ou equivalente.</li>
+              <li>Armazenamento seguro do token conforme decisão da Fase 2.</li>
+              <li>Interceptador para incluir token nas requests.</li>
+            </ul>
+          </article>
+          <article class="card">
+            <h3>Comportamentos</h3>
+            <ul>
+              <li>Redirecionar sem sessão para <code>/login</code>.</li>
+              <li>Impedir acesso privado sem autenticação.</li>
+              <li>Limpar sessão no logout.</li>
+              <li>Tratar 401 e 403 de forma padronizada.</li>
+            </ul>
+          </article>
+        </div>
+      </section>
+
+      <section>
+        <h2>12. Padrão por página</h2>
+        <p>
+          Páginas devem coordenar dados, layout e componentes. Quando uma página
+          crescer demais, partes reutilizáveis devem ser extraídas para
+          componentes.
+        </p>
+        <div class="code">ProjectDetailsPage
+- Carrega projeto
+- Renderiza LoadingState, ErrorState ou EmptyState
+- Usa ProjectHeader
+- Usa PositionCard
+- Usa ApplicationForm
+- Chama projectService e applicationService</div>
+      </section>
+
+      <section>
+        <h2>13. Checklist para novas telas</h2>
+        <ul>
+          <li>A rota está definida em <code>routes.jsx</code>?</li>
+          <li>A tela pertence a <code>pages/public</code> ou <code>pages/private</code>?</li>
+          <li>Existe layout adequado?</li>
+          <li>Componentes repetidos foram extraídos quando necessário?</li>
+          <li>Chamadas HTTP estão em service/hook, não espalhadas na tela?</li>
+          <li>Estados de loading, error, empty e success foram considerados?</li>
+          <li>Inputs têm labels e mensagens de erro?</li>
+          <li>A tela funciona em mobile e desktop?</li>
+          <li>O design segue a identidade atual do BuildHub?</li>
+          <li>Não há dados sensíveis expostos no frontend?</li>
+        </ul>
+      </section>
+
+      <section>
+        <h2>14. Critério de conclusão da Task 5</h2>
+        <p>
+          A Task 5 é considerada concluída quando esta documentação estiver
+          criada e alinhada com a estrutura atual do frontend. A criação física
+          de <code>components</code>, <code>layouts</code>, <code>services</code>
+          e <code>hooks</code> deve acontecer aos poucos, conforme os módulos
+          reais forem implementados.
+        </p>
+      </section>
+
+      <p class="footer">
+        BuildHub - Arquitetura do frontend. Este documento deve ser revisado
+        antes da integração real com API e autenticação.
+      </p>
+    </main>
+  </body>
+</html>
