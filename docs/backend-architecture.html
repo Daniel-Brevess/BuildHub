@@ -1,0 +1,706 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>BuildHub - Arquitetura do Backend</title>
+    <style>
+      :root {
+        --bg: #ffffff;
+        --text: #111827;
+        --muted: #5b6472;
+        --soft: #f6f8f4;
+        --soft-strong: #edf5dd;
+        --border: #dfe7d7;
+        --green: #365314;
+        --lime: #a3e635;
+        --purple: #7c3aed;
+        --code: #0f172a;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        background: var(--bg);
+        color: var(--text);
+        font-family: Inter, ui-sans-serif, system-ui, -apple-system,
+          BlinkMacSystemFont, "Segoe UI", sans-serif;
+        line-height: 1.65;
+      }
+
+      .page {
+        max-width: 1040px;
+        margin: 0 auto;
+        padding: 64px 28px 96px;
+      }
+
+      header {
+        border-bottom: 1px solid var(--border);
+        padding-bottom: 36px;
+      }
+
+      .eyebrow {
+        color: var(--purple);
+        font-size: 12px;
+        font-weight: 800;
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+      }
+
+      h1,
+      h2,
+      h3 {
+        margin: 0;
+        color: var(--text);
+        line-height: 1.08;
+      }
+
+      h1 {
+        max-width: 860px;
+        margin-top: 12px;
+        font-size: clamp(42px, 7vw, 76px);
+        font-weight: 900;
+      }
+
+      h2 {
+        margin-top: 56px;
+        font-size: clamp(30px, 4vw, 44px);
+        font-weight: 850;
+      }
+
+      h3 {
+        margin-top: 28px;
+        font-size: 22px;
+        font-weight: 800;
+      }
+
+      p {
+        margin: 14px 0 0;
+        color: var(--muted);
+        font-size: 16px;
+      }
+
+      strong {
+        color: var(--text);
+      }
+
+      ul,
+      ol {
+        margin: 16px 0 0;
+        padding-left: 22px;
+        color: var(--muted);
+      }
+
+      li + li {
+        margin-top: 8px;
+      }
+
+      code {
+        border-radius: 7px;
+        background: #eef3e7;
+        color: var(--green);
+        padding: 2px 6px;
+        font-family: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+        font-size: 0.92em;
+      }
+
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 18px;
+        overflow: hidden;
+        border: 1px solid var(--border);
+        border-radius: 16px;
+      }
+
+      th,
+      td {
+        border-bottom: 1px solid var(--border);
+        padding: 13px 14px;
+        text-align: left;
+        vertical-align: top;
+      }
+
+      th {
+        background: var(--soft);
+        color: var(--green);
+        font-size: 13px;
+        font-weight: 850;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+      }
+
+      td {
+        color: var(--muted);
+      }
+
+      tr:last-child td {
+        border-bottom: 0;
+      }
+
+      .lead {
+        max-width: 760px;
+        margin-top: 22px;
+        font-size: 19px;
+        font-weight: 550;
+      }
+
+      .meta {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        margin-top: 28px;
+      }
+
+      .pill {
+        border: 1px solid var(--border);
+        border-radius: 999px;
+        background: var(--soft);
+        color: var(--green);
+        padding: 8px 13px;
+        font-size: 13px;
+        font-weight: 800;
+      }
+
+      .grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 16px;
+        margin-top: 22px;
+      }
+
+      .grid-3 {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 16px;
+        margin-top: 22px;
+      }
+
+      .card {
+        border: 1px solid var(--border);
+        border-radius: 18px;
+        background: var(--soft);
+        padding: 20px;
+      }
+
+      .card h3 {
+        margin-top: 0;
+      }
+
+      .accent {
+        border-color: #d9ec97;
+        background: var(--soft-strong);
+      }
+
+      .note {
+        border-left: 5px solid var(--lime);
+        background: var(--soft);
+        margin-top: 22px;
+        padding: 18px 20px;
+        border-radius: 14px;
+      }
+
+      .code {
+        border-radius: 14px;
+        background: var(--code);
+        color: #e5e7eb;
+        font-family: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+        font-size: 14px;
+        overflow-x: auto;
+        padding: 18px;
+        margin-top: 16px;
+        white-space: pre;
+      }
+
+      .flow {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        margin-top: 18px;
+      }
+
+      .node {
+        border: 1px solid var(--border);
+        border-radius: 999px;
+        background: #ffffff;
+        color: var(--green);
+        padding: 9px 13px;
+        font-size: 13px;
+        font-weight: 850;
+      }
+
+      .footer {
+        border-top: 1px solid var(--border);
+        margin-top: 64px;
+        padding-top: 20px;
+        color: var(--muted);
+        font-size: 14px;
+      }
+
+      @media (max-width: 760px) {
+        .page {
+          padding: 42px 18px 72px;
+        }
+
+        .grid,
+        .grid-3 {
+          grid-template-columns: 1fr;
+        }
+      }
+
+      @media print {
+        body {
+          background: #ffffff;
+        }
+
+        .page {
+          max-width: none;
+          padding: 24px;
+        }
+
+        .card,
+        .note,
+        table {
+          break-inside: avoid;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main class="page">
+      <header>
+        <div class="eyebrow">Task 4</div>
+        <h1>Arquitetura do backend do BuildHub</h1>
+        <p class="lead">
+          Este documento define a organização oficial do backend, as
+          responsabilidades de cada camada, o fluxo de requests, padrões de DTO,
+          mapper, exception, validação e checklist para novos módulos.
+        </p>
+        <div class="meta">
+          <span class="pill">Java 21</span>
+          <span class="pill">Spring Boot</span>
+          <span class="pill">Spring Data JPA</span>
+          <span class="pill">PostgreSQL</span>
+        </div>
+      </header>
+
+      <section>
+        <h2>1. Estado atual</h2>
+        <p>
+          O backend já possui uma estrutura por camadas e um fluxo inicial de
+          waitlist usando controller, DTO, service, repository e entity. A Task
+          4 formaliza esse padrão para os módulos reais do MVP.
+        </p>
+        <div class="grid">
+          <article class="card accent">
+            <h3>Pacotes existentes</h3>
+            <ul>
+              <li><code>config</code></li>
+              <li><code>controller</code></li>
+              <li><code>dto</code></li>
+              <li><code>entities</code></li>
+              <li><code>repository</code></li>
+              <li><code>service</code></li>
+            </ul>
+          </article>
+          <article class="card">
+            <h3>Pacotes a criar quando necessário</h3>
+            <ul>
+              <li><code>mapper</code></li>
+              <li><code>exception</code></li>
+              <li><code>enums</code></li>
+              <li><code>security</code>, quando auth/JWT entrar na Fase 2</li>
+            </ul>
+          </article>
+        </div>
+        <div class="note">
+          <strong>Decisão:</strong> manter o pacote <code>entities</code>, pois
+          ele já existe no projeto. A documentação usa esse nome como padrão
+          oficial para as entidades JPA.
+        </div>
+      </section>
+
+      <section>
+        <h2>2. Estrutura de pacotes</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>Pacote</th>
+              <th>Responsabilidade</th>
+              <th>Exemplo</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>controller</code></td>
+              <td>Receber requisições HTTP, validar DTOs de entrada e retornar respostas.</td>
+              <td><code>ProjectController</code></td>
+            </tr>
+            <tr>
+              <td><code>service</code></td>
+              <td>Executar casos de uso, regras de negócio e transações.</td>
+              <td><code>ProjectService</code></td>
+            </tr>
+            <tr>
+              <td><code>repository</code></td>
+              <td>Isolar acesso ao banco com Spring Data JPA.</td>
+              <td><code>ProjectRepository</code></td>
+            </tr>
+            <tr>
+              <td><code>entities</code></td>
+              <td>Representar tabelas, relacionamentos e constraints JPA.</td>
+              <td><code>Project</code></td>
+            </tr>
+            <tr>
+              <td><code>dto</code></td>
+              <td>Definir contratos de entrada e saída da API.</td>
+              <td><code>CreateProjectRequest</code>, <code>ProjectResponse</code></td>
+            </tr>
+            <tr>
+              <td><code>mapper</code></td>
+              <td>Converter entity para response DTO e request DTO para entity quando fizer sentido.</td>
+              <td><code>ProjectMapper</code></td>
+            </tr>
+            <tr>
+              <td><code>exception</code></td>
+              <td>Centralizar exceptions de domínio e tratamento global de erros.</td>
+              <td><code>GlobalExceptionHandler</code></td>
+            </tr>
+            <tr>
+              <td><code>config</code></td>
+              <td>Concentrar configurações técnicas da aplicação.</td>
+              <td><code>SecurityConfig</code></td>
+            </tr>
+            <tr>
+              <td><code>enums</code></td>
+              <td>Guardar enums compartilhados pelo domínio.</td>
+              <td><code>ApplicationStatus</code></td>
+            </tr>
+            <tr>
+              <td><code>security</code></td>
+              <td>Organizar autenticação, JWT, filtros e utilitários de segurança na Fase 2.</td>
+              <td><code>JwtService</code></td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+
+      <section>
+        <h2>3. Fluxo padrão de uma request</h2>
+        <p>
+          Toda funcionalidade de backend deve seguir um caminho previsível. Isso
+          reduz acoplamento, facilita testes e impede regra de negócio em
+          controllers.
+        </p>
+        <div class="flow">
+          <span class="node">Controller</span>
+          <span class="node">Request DTO</span>
+          <span class="node">Service</span>
+          <span class="node">Repository</span>
+          <span class="node">Entity</span>
+          <span class="node">Mapper</span>
+          <span class="node">Response DTO</span>
+        </div>
+        <div class="code">POST /projects
+Controller recebe CreateProjectRequest
+Controller chama ProjectService.create(request)
+Service valida regras de negócio
+Service usa ProjectRepository
+Service retorna entidade ou resultado de domínio
+Mapper converte para ProjectResponse
+Controller retorna ResponseEntity&lt;ProjectResponse&gt;</div>
+      </section>
+
+      <section>
+        <h2>4. Responsabilidades por camada</h2>
+        <div class="grid">
+          <article class="card accent">
+            <h3>Controller</h3>
+            <ul>
+              <li>Define rota, verbo HTTP e status de resposta.</li>
+              <li>Recebe <code>@Valid @RequestBody</code> quando houver body.</li>
+              <li>Chama apenas services.</li>
+              <li>Não acessa repository diretamente.</li>
+              <li>Não contém regra de negócio.</li>
+            </ul>
+          </article>
+          <article class="card">
+            <h3>Service</h3>
+            <ul>
+              <li>Concentra casos de uso.</li>
+              <li>Valida regras de negócio.</li>
+              <li>Controla transações com <code>@Transactional</code>.</li>
+              <li>Coordena repositories e mappers.</li>
+              <li>Lança exceptions de domínio quando necessário.</li>
+            </ul>
+          </article>
+          <article class="card">
+            <h3>Repository</h3>
+            <ul>
+              <li>Estende interfaces do Spring Data JPA.</li>
+              <li>Declara queries customizadas quando necessário.</li>
+              <li>Não contém regra de negócio.</li>
+              <li>Não retorna DTO por padrão no MVP.</li>
+            </ul>
+          </article>
+          <article class="card accent">
+            <h3>Entity</h3>
+            <ul>
+              <li>Representa tabela e relacionamentos.</li>
+              <li>Usa nomes e constraints compatíveis com o DER.</li>
+              <li>Não deve ser exposta diretamente pela API.</li>
+              <li>Relacionamentos devem usar <code>LAZY</code> por padrão.</li>
+            </ul>
+          </article>
+        </div>
+      </section>
+
+      <section>
+        <h2>5. DTOs</h2>
+        <p>
+          DTOs são o contrato da API. Eles protegem entidades internas e deixam
+          claro o que entra e o que sai de cada endpoint.
+        </p>
+        <div class="grid">
+          <article class="card">
+            <h3>Request DTO</h3>
+            <ul>
+              <li>Usar suffix <code>Request</code>.</li>
+              <li>Representar entrada de um caso de uso.</li>
+              <li>Receber anotações de validação.</li>
+              <li>Não conter campos calculados pelo backend.</li>
+            </ul>
+            <div class="code">CreateProjectRequest
+UpdateProjectRequest
+CreateApplicationRequest</div>
+          </article>
+          <article class="card accent">
+            <h3>Response DTO</h3>
+            <ul>
+              <li>Usar suffix <code>Response</code>.</li>
+              <li>Representar saída pública da API.</li>
+              <li>Não expor senha, hash, tokens ou dados sensíveis.</li>
+              <li>Pode agregar dados úteis para a tela.</li>
+            </ul>
+            <div class="code">ProjectResponse
+ApplicationResponse
+ConversationResponse</div>
+          </article>
+        </div>
+        <div class="note">
+          <strong>Decisão:</strong> records são uma boa opção para DTOs simples,
+          seguindo o padrão já usado em <code>WaitingRequestDTO</code> e
+          <code>WaitingResponseDTO</code>.
+        </div>
+      </section>
+
+      <section>
+        <h2>6. Mappers</h2>
+        <p>
+          Mappers devem concentrar conversões entre entidades e DTOs quando a
+          conversão deixar de ser trivial. No MVP, mappers manuais são
+          suficientes; não há necessidade de adicionar dependência de mapping.
+        </p>
+        <div class="grid">
+          <article class="card accent">
+            <h3>Quando criar mapper</h3>
+            <ul>
+              <li>Quando a resposta tiver vários campos.</li>
+              <li>Quando houver conversão de enums ou campos derivados.</li>
+              <li>Quando mais de um service precisar da mesma conversão.</li>
+              <li>Quando o controller ficaria poluído com montagem de resposta.</li>
+            </ul>
+          </article>
+          <article class="card">
+            <h3>Padrão</h3>
+            <ul>
+              <li>Nome do recurso + <code>Mapper</code>.</li>
+              <li>Métodos pequenos e explícitos.</li>
+              <li>Sem acesso a repository.</li>
+              <li>Sem regra de negócio relevante.</li>
+            </ul>
+          </article>
+        </div>
+        <div class="code">ProjectMapper
+- toResponse(Project project)
+- toSummaryResponse(Project project)
+- toEntity(CreateProjectRequest request, User owner)</div>
+      </section>
+
+      <section>
+        <h2>7. Exceptions e resposta de erro</h2>
+        <p>
+          Erros devem ser previsíveis para o frontend e consistentes em toda a
+          API. A aplicação deve ter exceptions de domínio e um handler global.
+        </p>
+        <div class="grid">
+          <article class="card">
+            <h3>Classes esperadas</h3>
+            <ul>
+              <li><code>ApiErrorResponse</code></li>
+              <li><code>GlobalExceptionHandler</code></li>
+              <li><code>ResourceNotFoundException</code></li>
+              <li><code>BusinessRuleException</code></li>
+              <li><code>UnauthorizedOperationException</code></li>
+            </ul>
+          </article>
+          <article class="card accent">
+            <h3>Formato de erro</h3>
+            <div class="code">{
+  "message": "Mensagem clara para o erro.",
+  "code": "ERROR_CODE",
+  "field": "email"
+}</div>
+          </article>
+        </div>
+        <div class="note">
+          Validações de campos devem retornar erro claro por campo. Regras de
+          negócio devem retornar código previsível, por exemplo
+          <code>DUPLICATE_APPLICATION</code>.
+        </div>
+      </section>
+
+      <section>
+        <h2>8. Validação</h2>
+        <div class="grid">
+          <article class="card accent">
+            <h3>DTO</h3>
+            <ul>
+              <li>Usar Bean Validation para formato e obrigatoriedade.</li>
+              <li><code>@NotBlank</code> para textos obrigatórios.</li>
+              <li><code>@Email</code> para email.</li>
+              <li><code>@Size</code> para limites de texto.</li>
+              <li><code>@NotNull</code> para enums e IDs obrigatórios.</li>
+            </ul>
+          </article>
+          <article class="card">
+            <h3>Service</h3>
+            <ul>
+              <li>Validar regra de negócio.</li>
+              <li>Validar permissão e ownership.</li>
+              <li>Validar duplicidade lógica.</li>
+              <li>Validar transição de status.</li>
+              <li>Validar consistência entre entidades relacionadas.</li>
+            </ul>
+          </article>
+        </div>
+        <div class="code">Exemplo:
+Se Application.type = POSITION_APPLICATION, position_id é obrigatório.
+Se Application.type = PROJECT_JOIN_REQUEST, position_id deve ser nulo.</div>
+      </section>
+
+      <section>
+        <h2>9. Transações</h2>
+        <ul>
+          <li>Services de escrita devem usar <code>@Transactional</code>.</li>
+          <li>Services apenas de leitura devem usar <code>@Transactional(readOnly = true)</code>.</li>
+          <li>Controller não deve controlar transação.</li>
+          <li>Repository não deve esconder transações complexas.</li>
+          <li>Fluxos com múltiplas entidades devem ser coordenados no service.</li>
+        </ul>
+        <div class="note">
+          Criar uma <code>Application</code> e a respectiva
+          <code>Conversation</code> é um exemplo de operação que deve acontecer
+          dentro da mesma transação.
+        </div>
+      </section>
+
+      <section>
+        <h2>10. Relacionamentos JPA</h2>
+        <ul>
+          <li>Preferir <code>FetchType.LAZY</code> em relacionamentos.</li>
+          <li>Evitar expor entidades com relacionamentos diretamente na API.</li>
+          <li>Evitar cascades amplos sem motivo forte.</li>
+          <li>Usar queries explícitas quando houver risco de N+1.</li>
+          <li>Tabelas de junção com entidade própria devem ter <code>id</code> e unique constraint.</li>
+        </ul>
+      </section>
+
+      <section>
+        <h2>11. Segurança dentro da arquitetura</h2>
+        <p>
+          A implementação completa de autenticação entra na Fase 2, mas a
+          arquitetura já deve reservar espaço para segurança.
+        </p>
+        <div class="grid">
+          <article class="card accent">
+            <h3>Agora</h3>
+            <ul>
+              <li>Não expor <code>password_hash</code> em responses.</li>
+              <li>Não confiar no frontend para regras críticas.</li>
+              <li>Separar validação de entrada e regra de negócio.</li>
+              <li>Manter <code>SecurityConfig</code> em <code>config</code>.</li>
+            </ul>
+          </article>
+          <article class="card">
+            <h3>Fase 2</h3>
+            <ul>
+              <li>Criar pacote <code>security</code> se necessário.</li>
+              <li>Adicionar JWT service, filtros e autenticação.</li>
+              <li>Revisar CORS por ambiente.</li>
+              <li>Proteger rotas privadas.</li>
+            </ul>
+          </article>
+        </div>
+      </section>
+
+      <section>
+        <h2>12. Padrão por módulo</h2>
+        <p>
+          Ao criar um novo módulo do MVP, o mínimo esperado é que ele seja
+          implementado de forma consistente com as camadas abaixo.
+        </p>
+        <div class="code">ProjectController
+ProjectService
+ProjectRepository
+Project
+CreateProjectRequest
+UpdateProjectRequest
+ProjectResponse
+ProjectMapper
+ProjectStatus
+ProjectType</div>
+        <div class="note">
+          Nem todo módulo precisa de todos esses arquivos desde o primeiro
+          commit. A regra é criar a camada quando ela tiver responsabilidade
+          real, sem inventar abstração vazia.
+        </div>
+      </section>
+
+      <section>
+        <h2>13. Checklist para novos módulos backend</h2>
+        <ul>
+          <li>Existe uma entidade ou caso de uso claro?</li>
+          <li>Controller chama apenas service?</li>
+          <li>Service concentra regra de negócio?</li>
+          <li>Repository não contém regra de negócio?</li>
+          <li>DTOs escondem dados sensíveis?</li>
+          <li>Validações simples estão no request DTO?</li>
+          <li>Validações de negócio estão no service?</li>
+          <li>Exceptions são padronizadas?</li>
+          <li>Mappers foram criados quando a conversão deixou de ser trivial?</li>
+          <li>Relacionamentos JPA evitam EAGER desnecessário?</li>
+          <li>O módulo tem testes compatíveis com o risco da alteração?</li>
+        </ul>
+      </section>
+
+      <section>
+        <h2>14. Critério de conclusão da Task 4</h2>
+        <p>
+          A Task 4 é considerada concluída quando esta documentação estiver
+          criada e alinhada com o backend atual. A implementação de pacotes como
+          <code>mapper</code> e <code>exception</code> acontecerá quando os
+          módulos reais exigirem essas responsabilidades.
+        </p>
+      </section>
+
+      <p class="footer">
+        BuildHub - Arquitetura do backend. Este documento deve ser revisado
+        antes da implementação dos módulos reais do MVP.
+      </p>
+    </main>
+  </body>
+</html>
