@@ -1,0 +1,599 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>BuildHub - Estratégia de CI/CD</title>
+    <style>
+      :root {
+        --bg: #ffffff;
+        --text: #111827;
+        --muted: #5b6472;
+        --soft: #f6f8f4;
+        --soft-strong: #edf5dd;
+        --border: #dfe7d7;
+        --green: #365314;
+        --lime: #a3e635;
+        --purple: #7c3aed;
+        --code: #0f172a;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        background: var(--bg);
+        color: var(--text);
+        font-family: Inter, ui-sans-serif, system-ui, -apple-system,
+          BlinkMacSystemFont, "Segoe UI", sans-serif;
+        line-height: 1.65;
+      }
+
+      .page {
+        max-width: 1040px;
+        margin: 0 auto;
+        padding: 64px 28px 96px;
+      }
+
+      header {
+        border-bottom: 1px solid var(--border);
+        padding-bottom: 36px;
+      }
+
+      .eyebrow {
+        color: var(--purple);
+        font-size: 12px;
+        font-weight: 800;
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+      }
+
+      h1,
+      h2,
+      h3 {
+        margin: 0;
+        color: var(--text);
+        line-height: 1.08;
+      }
+
+      h1 {
+        max-width: 860px;
+        margin-top: 12px;
+        font-size: clamp(42px, 7vw, 76px);
+        font-weight: 900;
+      }
+
+      h2 {
+        margin-top: 56px;
+        font-size: clamp(30px, 4vw, 44px);
+        font-weight: 850;
+      }
+
+      h3 {
+        margin-top: 28px;
+        font-size: 22px;
+        font-weight: 800;
+      }
+
+      p {
+        margin: 14px 0 0;
+        color: var(--muted);
+        font-size: 16px;
+      }
+
+      strong {
+        color: var(--text);
+      }
+
+      ul,
+      ol {
+        margin: 16px 0 0;
+        padding-left: 22px;
+        color: var(--muted);
+      }
+
+      li + li {
+        margin-top: 8px;
+      }
+
+      code {
+        border-radius: 7px;
+        background: #eef3e7;
+        color: var(--green);
+        padding: 2px 6px;
+        font-family: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+        font-size: 0.92em;
+      }
+
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 18px;
+        overflow: hidden;
+        border: 1px solid var(--border);
+        border-radius: 16px;
+      }
+
+      th,
+      td {
+        border-bottom: 1px solid var(--border);
+        padding: 13px 14px;
+        text-align: left;
+        vertical-align: top;
+      }
+
+      th {
+        background: var(--soft);
+        color: var(--green);
+        font-size: 13px;
+        font-weight: 850;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+      }
+
+      td {
+        color: var(--muted);
+      }
+
+      tr:last-child td {
+        border-bottom: 0;
+      }
+
+      .lead {
+        max-width: 760px;
+        margin-top: 22px;
+        font-size: 19px;
+        font-weight: 550;
+      }
+
+      .meta {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        margin-top: 28px;
+      }
+
+      .pill {
+        border: 1px solid var(--border);
+        border-radius: 999px;
+        background: var(--soft);
+        color: var(--green);
+        padding: 8px 13px;
+        font-size: 13px;
+        font-weight: 800;
+      }
+
+      .grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 16px;
+        margin-top: 22px;
+      }
+
+      .grid-3 {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 16px;
+        margin-top: 22px;
+      }
+
+      .card {
+        border: 1px solid var(--border);
+        border-radius: 18px;
+        background: var(--soft);
+        padding: 20px;
+      }
+
+      .card h3 {
+        margin-top: 0;
+      }
+
+      .accent {
+        border-color: #d9ec97;
+        background: var(--soft-strong);
+      }
+
+      .note {
+        border-left: 5px solid var(--lime);
+        background: var(--soft);
+        margin-top: 22px;
+        padding: 18px 20px;
+        border-radius: 14px;
+      }
+
+      .code {
+        border-radius: 14px;
+        background: var(--code);
+        color: #e5e7eb;
+        font-family: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+        font-size: 14px;
+        overflow-x: auto;
+        padding: 18px;
+        margin-top: 16px;
+        white-space: pre;
+      }
+
+      .flow {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        margin-top: 18px;
+      }
+
+      .node {
+        border: 1px solid var(--border);
+        border-radius: 999px;
+        background: #ffffff;
+        color: var(--green);
+        padding: 9px 13px;
+        font-size: 13px;
+        font-weight: 850;
+      }
+
+      .footer {
+        border-top: 1px solid var(--border);
+        margin-top: 64px;
+        padding-top: 20px;
+        color: var(--muted);
+        font-size: 14px;
+      }
+
+      @media (max-width: 760px) {
+        .page {
+          padding: 42px 18px 72px;
+        }
+
+        .grid,
+        .grid-3 {
+          grid-template-columns: 1fr;
+        }
+      }
+
+      @media print {
+        body {
+          background: #ffffff;
+        }
+
+        .page {
+          max-width: none;
+          padding: 24px;
+        }
+
+        .card,
+        .note,
+        table {
+          break-inside: avoid;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main class="page">
+      <header>
+        <div class="eyebrow">Task 7</div>
+        <h1>Estratégia de CI/CD do BuildHub</h1>
+        <p class="lead">
+          Este documento define como o BuildHub deve validar automaticamente o
+          frontend e o backend, preparar o projeto para deploy real e evoluir de
+          CI para CD com segurança.
+        </p>
+        <div class="meta">
+          <span class="pill">GitHub Actions</span>
+          <span class="pill">CI primeiro</span>
+          <span class="pill">Deploy controlado</span>
+          <span class="pill">Secrets</span>
+        </div>
+      </header>
+
+      <section>
+        <h2>1. Objetivo</h2>
+        <p>
+          A estratégia inicial é criar uma esteira que responda, a cada push ou
+          pull request, se o projeto continua saudável. O deploy automatizado só
+          deve entrar depois que cadastro e login reais estiverem funcionando.
+        </p>
+        <div class="note">
+          <strong>Decisão principal:</strong> implementar CI antes de CD. Primeiro
+          automatizar validação; depois automatizar deploy com controle.
+        </div>
+      </section>
+
+      <section>
+        <h2>2. Conceitos</h2>
+        <div class="grid">
+          <article class="card accent">
+            <h3>CI</h3>
+            <p>
+              Continuous Integration é a validação automática do código. Ela
+              verifica build, lint e testes sempre que o código muda.
+            </p>
+          </article>
+          <article class="card">
+            <h3>CD</h3>
+            <p>
+              Continuous Delivery ou Deployment é a preparação ou publicação
+              automática da aplicação. No BuildHub, começa como delivery
+              controlado.
+            </p>
+          </article>
+          <article class="card">
+            <h3>Pipeline</h3>
+            <p>
+              Sequência de passos executados pela ferramenta de CI/CD, como
+              instalar dependências, rodar testes e gerar builds.
+            </p>
+          </article>
+          <article class="card accent">
+            <h3>Secrets</h3>
+            <p>
+              Variáveis sensíveis guardadas fora do código, como URL do banco,
+              JWT secret e credenciais de deploy.
+            </p>
+          </article>
+        </div>
+      </section>
+
+      <section>
+        <h2>3. Ferramenta escolhida</h2>
+        <p>
+          A ferramenta recomendada é <strong>GitHub Actions</strong>, porque o
+          projeto já está no GitHub, não exige serviço externo para começar e é
+          suficiente para validar frontend, backend e deploy futuro.
+        </p>
+        <div class="code">.github/workflows/ci.yml</div>
+        <div class="note">
+          Nesta fase, o documento define a estratégia. O arquivo de workflow deve
+          ser criado quando a implementação da pipeline começar.
+        </div>
+      </section>
+
+      <section>
+        <h2>4. Pipeline mínima</h2>
+        <p>
+          A pipeline mínima deve validar frontend e backend em jobs separados.
+          Isso facilita descobrir onde houve falha.
+        </p>
+        <div class="grid">
+          <article class="card accent">
+            <h3>Frontend</h3>
+            <ul>
+              <li>Preparar Node.</li>
+              <li>Instalar dependências com <code>npm ci</code>.</li>
+              <li>Rodar <code>npm run lint</code>.</li>
+              <li>Rodar <code>npm run build</code>.</li>
+            </ul>
+          </article>
+          <article class="card">
+            <h3>Backend</h3>
+            <ul>
+              <li>Preparar Java 21.</li>
+              <li>Usar Maven Wrapper.</li>
+              <li>Rodar <code>./mvnw test</code>.</li>
+              <li>Rodar <code>./mvnw package</code>.</li>
+            </ul>
+          </article>
+        </div>
+      </section>
+
+      <section>
+        <h2>5. Comandos locais equivalentes</h2>
+        <p>
+          O desenvolvedor deve conseguir reproduzir localmente o que a pipeline
+          executa no GitHub Actions.
+        </p>
+        <div class="grid">
+          <article class="card">
+            <h3>Frontend</h3>
+            <div class="code">cd front-end
+npm ci
+npm run lint
+npm run build</div>
+          </article>
+          <article class="card accent">
+            <h3>Backend no Windows</h3>
+            <div class="code">cd back-end
+.\mvnw.cmd test
+.\mvnw.cmd package</div>
+          </article>
+          <article class="card">
+            <h3>Backend no Linux/GitHub Actions</h3>
+            <div class="code">cd back-end
+./mvnw test
+./mvnw package</div>
+          </article>
+        </div>
+      </section>
+
+      <section>
+        <h2>6. Quando a pipeline deve rodar</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>Evento</th>
+              <th>Rodar CI?</th>
+              <th>Motivo</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Push em <code>main</code></td>
+              <td>Sim</td>
+              <td>Garantir que a branch principal continua saudável.</td>
+            </tr>
+            <tr>
+              <td>Pull request para <code>main</code></td>
+              <td>Sim</td>
+              <td>Validar alterações antes de entrar na branch principal.</td>
+            </tr>
+            <tr>
+              <td>Commit local</td>
+              <td>Não automaticamente</td>
+              <td>O desenvolvedor deve rodar comandos relevantes localmente.</td>
+            </tr>
+            <tr>
+              <td>Tag/release</td>
+              <td>Futuro</td>
+              <td>Pode ser usado para deploy versionado no futuro.</td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+
+      <section>
+        <h2>7. Estratégia de deploy</h2>
+        <p>
+          O primeiro deploy real deve acontecer quando cadastro e login estiverem
+          funcionando. Até lá, a prioridade é CI, documentação e validação de
+          build.
+        </p>
+        <div class="grid">
+          <article class="card accent">
+            <h3>Agora</h3>
+            <ul>
+              <li>Documentar estratégia de CI/CD.</li>
+              <li>Validar frontend e backend automaticamente.</li>
+              <li>Não fazer deploy automático.</li>
+              <li>Preparar mentalidade de pipeline.</li>
+            </ul>
+          </article>
+          <article class="card">
+            <h3>Depois de auth</h3>
+            <ul>
+              <li>Escolher plataforma de deploy.</li>
+              <li>Configurar variáveis de ambiente.</li>
+              <li>Criar deploy controlado.</li>
+              <li>Adicionar smoke test.</li>
+            </ul>
+          </article>
+        </div>
+        <div class="note">
+          <strong>Decisão:</strong> usar Continuous Delivery primeiro. O código
+          fica pronto para deploy, mas a publicação em produção deve ser
+          controlada até o projeto amadurecer.
+        </div>
+      </section>
+
+      <section>
+        <h2>8. Variáveis de ambiente e secrets</h2>
+        <p>
+          Nenhum segredo deve ficar no repositório. Em CI/CD, segredos devem
+          ficar em GitHub Secrets ou no painel da plataforma de deploy.
+        </p>
+        <div class="grid">
+          <article class="card accent">
+            <h3>Secrets futuros</h3>
+            <ul>
+              <li><code>DATABASE_URL</code></li>
+              <li><code>DATABASE_USERNAME</code></li>
+              <li><code>DATABASE_PASSWORD</code></li>
+              <li><code>JWT_SECRET</code></li>
+              <li><code>CORS_ALLOWED_ORIGINS</code></li>
+              <li><code>DEPLOY_TOKEN</code>, se a plataforma exigir.</li>
+            </ul>
+          </article>
+          <article class="card">
+            <h3>Regras</h3>
+            <ul>
+              <li>Nunca commitar <code>.env</code>.</li>
+              <li>Nunca commitar secrets reais.</li>
+              <li>Usar nomes previsíveis para variáveis.</li>
+              <li>Separar variáveis de produção e desenvolvimento.</li>
+            </ul>
+          </article>
+        </div>
+      </section>
+
+      <section>
+        <h2>9. Smoke test</h2>
+        <p>
+          Smoke test é uma verificação rápida após deploy para confirmar que a
+          aplicação subiu e responde.
+        </p>
+        <div class="code">GET /health
+GET /actuator/health</div>
+        <div class="note">
+          O endpoint de health pode ser implementado no futuro com Spring
+          Actuator ou com um endpoint simples próprio. Não é obrigatório na Fase
+          1.
+        </div>
+      </section>
+
+      <section>
+        <h2>10. Workflow futuro sugerido</h2>
+        <p>
+          Quando a pipeline for implementada, este fluxo é a base recomendada.
+        </p>
+        <div class="code">name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  frontend:
+    runs-on: ubuntu-latest
+    steps:
+      - checkout
+      - setup node
+      - npm ci
+      - npm run lint
+      - npm run build
+
+  backend:
+    runs-on: ubuntu-latest
+    steps:
+      - checkout
+      - setup java 21
+      - ./mvnw test
+      - ./mvnw package</div>
+      </section>
+
+      <section>
+        <h2>11. Critério mínimo antes de deploy</h2>
+        <ul>
+          <li>Frontend com lint passando.</li>
+          <li>Frontend com build passando.</li>
+          <li>Backend com testes passando.</li>
+          <li>Backend com package passando.</li>
+          <li>Variáveis de ambiente configuradas.</li>
+          <li>Sem secrets no repositório.</li>
+          <li>Cadastro e login funcionando.</li>
+          <li>Plano de rollback ou correção rápida definido.</li>
+        </ul>
+      </section>
+
+      <section>
+        <h2>12. Checklist de CI/CD</h2>
+        <ul>
+          <li>A pipeline roda em push para main?</li>
+          <li>A pipeline roda em pull request?</li>
+          <li>Frontend e backend estão separados em jobs?</li>
+          <li>O frontend roda lint e build?</li>
+          <li>O backend roda testes e package?</li>
+          <li>Os comandos podem ser reproduzidos localmente?</li>
+          <li>Secrets estão fora do repositório?</li>
+          <li>Deploy automático está desativado até auth real existir?</li>
+          <li>Existe critério claro para o primeiro deploy?</li>
+        </ul>
+      </section>
+
+      <section>
+        <h2>13. Critério de conclusão da Task 7</h2>
+        <p>
+          A Task 7 é considerada concluída quando esta estratégia estiver
+          documentada, a pipeline mínima estiver definida e houver um plano claro
+          para introduzir deploy após cadastro e login reais.
+        </p>
+      </section>
+
+      <p class="footer">
+        BuildHub - Estratégia de CI/CD. Este documento deve ser revisado quando
+        o primeiro workflow do GitHub Actions for implementado.
+      </p>
+    </main>
+  </body>
+</html>
