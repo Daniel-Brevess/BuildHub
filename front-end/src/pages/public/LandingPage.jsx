@@ -271,34 +271,48 @@ function LandingPage() {
 
       <Outlet />
 
-      <footer className="bg-[var(--background)] px-5 py-8 text-sm font-medium text-[var(--text-muted)] lg:px-8">
-        <div className="mx-auto flex max-w-7xl flex-col gap-6 md:flex-row md:items-center md:justify-between">
-          <div className="flex items-center gap-3">
-            <img
-              src={logoBlack}
-              alt="BuildHub"
-              className="h-8 w-8 object-contain"
-            />
-            <p>Copyright (c) 2026 BuildHub. All rights reserved.</p>
+      <footer className="mt-8 rounded-t-[2.5rem] border-t border-[var(--form-border)] bg-[var(--inverted)] px-5 pb-12 pt-20 text-sm font-medium text-[var(--button-text)] shadow-2xl shadow-[var(--shadow)] lg:px-8 lg:pb-14 lg:pt-24">
+        <div className="mx-auto flex min-h-44 max-w-7xl flex-col justify-between gap-12">
+          <div className="flex flex-col gap-6 md:flex-row md:items-start md:justify-between">
+            <div className="max-w-md">
+              <div className="flex items-center gap-3">
+                <img
+                  src={logoBlack}
+                  alt="BuildHub"
+                  className="h-10 w-10 object-contain"
+                />
+                <span className="text-base font-semibold">
+                  BuildHub
+                </span>
+              </div>
+              <p className="mt-5 text-base font-medium leading-7 opacity-70">
+                Um lugar mais simples para encontrar pessoas certas e construir
+                projetos reais.
+              </p>
+            </div>
+
+            <div className="flex flex-wrap items-center gap-4">
+              {socialLinks.map((link) => {
+                const Icon = link.icon
+
+                return (
+                  <a
+                    className="inline-flex items-center gap-2 rounded-full border border-[var(--form-border)] bg-[var(--button-text)]/10 px-4 py-2 text-[var(--button-text)]/75 transition hover:text-[var(--button-text)]"
+                    href={link.href}
+                    key={link.name}
+                    rel="noreferrer"
+                    target={link.href.startsWith('http') ? '_blank' : undefined}
+                  >
+                    <Icon size={16} aria-hidden="true" />
+                    {link.name}
+                  </a>
+                )
+              })}
+            </div>
           </div>
 
-          <div className="flex flex-wrap items-center gap-4">
-            {socialLinks.map((link) => {
-              const Icon = link.icon
-
-              return (
-                <a
-                  className="inline-flex items-center gap-2 transition hover:text-[var(--text)]"
-                  href={link.href}
-                  key={link.name}
-                  rel="noreferrer"
-                  target={link.href.startsWith('http') ? '_blank' : undefined}
-                >
-                  <Icon size={16} aria-hidden="true" />
-                  {link.name}
-                </a>
-              )
-            })}
+          <div className="border-t border-[var(--form-border)] pt-6">
+            <p className="opacity-70">Copyright (c) 2026 BuildHub. All rights reserved.</p>
           </div>
         </div>
       </footer>
