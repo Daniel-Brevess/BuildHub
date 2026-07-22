@@ -2,15 +2,15 @@ const COLOR_MODE_STORAGE_KEY = 'buildhub-color-mode'
 
 export function getInitialColorMode() {
   if (typeof window === 'undefined') {
-    return 'dark'
+    return 'light'
   }
 
   try {
     const storedMode = window.localStorage.getItem(COLOR_MODE_STORAGE_KEY)
 
-    return storedMode === 'light' || storedMode === 'dark' ? storedMode : 'dark'
+    return storedMode === 'light' || storedMode === 'dark' ? storedMode : 'light'
   } catch {
-    return 'dark'
+    return 'light'
   }
 }
 
