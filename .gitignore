@@ -1,26 +1,14 @@
 # ------------------------------------------------------------------------------
-# BuildHub - Full Stack Java + React
+# BuildHub - repository-wide ignores
 # ------------------------------------------------------------------------------
 
-# ------------------------------------------------------------------------------
-# Secrets, Environment Variables, and Credentials
-# ------------------------------------------------------------------------------
+# Secrets and local environment
 .env
 .env.*
 *.env
 *.env.*
 !.env.example
 !.env.*.example
-
-*.pem
-*.key
-*.crt
-*.cer
-*.p12
-*.pfx
-*.jks
-*.keystore
-*.truststore
 
 secrets/
 secret/
@@ -33,86 +21,58 @@ private-secrets/
 credentials.json
 service-account*.json
 
-# ------------------------------------------------------------------------------
-# Java / Spring Boot / Hibernate
-# ------------------------------------------------------------------------------
-target/
-out/
-build/
-bin/
+*.pem
+*.key
+*.crt
+*.cer
+*.p12
+*.pfx
+*.jks
+*.keystore
+*.truststore
 
-*.class
-*.jar
-*.war
-*.ear
-*.nar
-
-hs_err_pid*
-replay_pid*
-*.hprof
-*.heapdump
-*.dump
-*.dmp
-*.stackdump
-
-spring.log
+# Local runtime overrides
+application-local.properties
 application-local.yml
 application-local.yaml
-application-local.properties
+application-*.local.properties
 application-*.local.yml
 application-*.local.yaml
-application-*.local.properties
+application-prod.properties
+application-secrets.properties
+docker-compose.override.yml
+docker-compose.local.yml
 
-# ------------------------------------------------------------------------------
-# Maven
-# ------------------------------------------------------------------------------
-.mvn/timing.properties
-.mvn/wrapper/maven-wrapper.jar
-dependency-reduced-pom.xml
-release.properties
-pom.xml.tag
-pom.xml.releaseBackup
-pom.xml.versionsBackup
-pom.xml.next
-
-# ------------------------------------------------------------------------------
-# Node.js / React / Vite / Tailwind
-# ------------------------------------------------------------------------------
-node_modules/
+# Build outputs and dependency caches
+target/
+build/
+out/
+bin/
 dist/
 dist-ssr/
-build/
-.vite/
-.vite-cache/
-vite.config.*.timestamp-*
-vite.config.*.mjs
+node_modules/
 
-.npm/
-.npm-cache/
-.pnpm-store/
-.yarn/
-!.yarn/releases/
-!.yarn/plugins/
-!.yarn/sdks/
-!.yarn/versions/
+# Logs, reports and coverage
+logs/
+log/
+reports/tmp/
+reports/temp/
+coverage/
+.nyc_output/
+surefire-reports/
+failsafe-reports/
+junit*.xml
+*.log
+*.log.*
+*.err
+*.error
+*.debug
 
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-pnpm-debug.log*
-lerna-debug.log*
-
-*.tsbuildinfo
-*.local
-
-# ------------------------------------------------------------------------------
-# Database Files, Backups, Dumps, and Exports
-# ------------------------------------------------------------------------------
+# Database files, backups and dumps
 *.sqlite
 *.sqlite3
 *.db
 *.db3
-
 *.sql
 *.sql.gz
 *.dump
@@ -121,28 +81,11 @@ lerna-debug.log*
 *.bkp
 *.pgdump
 *.psql
-
 exports/
 backups/
 dumps/
 
-# ------------------------------------------------------------------------------
-# Logs, Debug Files, and Temporary Reports
-# ------------------------------------------------------------------------------
-logs/
-log/
-*.log
-*.log.*
-*.err
-*.error
-*.debug
-debug/
-reports/tmp/
-reports/temp/
-
-# ------------------------------------------------------------------------------
-# Local Uploads and Temporary Storage
-# ------------------------------------------------------------------------------
+# Local uploads and temp storage
 uploads/
 upload/
 storage/
@@ -154,26 +97,27 @@ tmp/
 cache/
 .cache/
 
-# ------------------------------------------------------------------------------
-# IntelliJ IDEA
-# ------------------------------------------------------------------------------
+# IDEs and editors
 .idea/
-*.iml
-*.iws
-*.ipr
 .idea_modules/
-
-# ------------------------------------------------------------------------------
-# VS Code
-# ------------------------------------------------------------------------------
 .vscode/
 !.vscode/extensions.json
 !.vscode/settings.example.json
 !.vscode/launch.example.json
+*.iml
+*.iws
+*.ipr
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+*.swp
+*.swo
+*.tmp
+*.temp
 
-# ------------------------------------------------------------------------------
-# Operating System Files
-# ------------------------------------------------------------------------------
+# OS files
 .DS_Store
 .AppleDouble
 .LSOverride
@@ -181,7 +125,6 @@ Icon?
 ._*
 .Spotlight-V100
 .Trashes
-
 Thumbs.db
 Thumbs.db:encryptable
 ehthumbs.db
@@ -193,30 +136,10 @@ $RECYCLE.BIN/
 *.msm
 *.msp
 *.lnk
-
 *~
 .directory
 .Trash-*
 
-# ------------------------------------------------------------------------------
-# Tooling and Coverage
-# ------------------------------------------------------------------------------
-coverage/
-.nyc_output/
-junit*.xml
-surefire-reports/
-failsafe-reports/
-
-# ------------------------------------------------------------------------------
-# Docker / Local Runtime Overrides
-# ------------------------------------------------------------------------------
-docker-compose.override.yml
-docker-compose.local.yml
-
-# ------------------------------------------------------------------------------
-# Miscellaneous
-# ------------------------------------------------------------------------------
-*.swp
-*.swo
-*.tmp
-*.temp
+# Local AI/tooling metadata
+.agents/
+.codex/

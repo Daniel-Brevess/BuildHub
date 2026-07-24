@@ -1,33 +1,98 @@
-HELP.md
+# ------------------------------------------------------------------------------
+# BuildHub backend - Java, Maven and Spring Boot
+# ------------------------------------------------------------------------------
+
+# Build outputs
 target/
+out/
+build/
+bin/
+*.class
+*.jar
+*.war
+*.ear
+*.nar
+!mvnw
+!mvnw.cmd
+
+# Maven wrapper/runtime
+.mvn/timing.properties
 .mvn/wrapper/maven-wrapper.jar
-!**/src/main/**/target/
-!**/src/test/**/target/
+dependency-reduced-pom.xml
+release.properties
+pom.xml.tag
+pom.xml.releaseBackup
+pom.xml.versionsBackup
+pom.xml.next
 
-### STS ###
-.apt_generated
-.classpath
-.factorypath
-.project
-.settings
-.springBeans
-.sts4-cache
+# Spring Boot generated/local files
+HELP.md
+spring.log
+application-local.properties
+application-local.yml
+application-local.yaml
+application-*.local.properties
+application-*.local.yml
+application-*.local.yaml
+application-prod.properties
+application-secrets.properties
 
-### IntelliJ IDEA ###
-.idea
+# Environment and secrets
+.env
+.env.*
+*.env
+*.env.*
+!.env.example
+!.env.*.example
+*.pem
+*.key
+*.crt
+*.cer
+*.p12
+*.pfx
+*.jks
+*.keystore
+*.truststore
+
+# Test and coverage output
+surefire-reports/
+failsafe-reports/
+junit*.xml
+coverage/
+*.exec
+
+# JVM diagnostics
+hs_err_pid*
+replay_pid*
+*.hprof
+*.heapdump
+*.dump
+*.dmp
+*.stackdump
+
+# IDEs
+.idea/
 *.iws
 *.iml
 *.ipr
-
-### NetBeans ###
-/nbproject/private/
-/nbbuild/
-/dist/
-/nbdist/
-/.nb-gradle/
-build/
-!**/src/main/**/build/
-!**/src/test/**/build/
-
-### VS Code ###
+.apt_generated/
+.classpath
+.factorypath
+.project
+.settings/
+.springBeans
+.sts4-cache/
+nbproject/private/
+nbbuild/
+nbdist/
+.nb-gradle/
 .vscode/
+
+# OS/editor temp
+.DS_Store
+Thumbs.db
+Desktop.ini
+*.swp
+*.swo
+*.tmp
+*.temp
