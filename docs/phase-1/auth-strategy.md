@@ -15,9 +15,10 @@ O BuildHub deve comecar com:
 - Cadastro simples.
 - Login simples.
 - Senha com hash usando BCrypt.
-- JWT minimo para sessao stateless.
+- Resposta simples com dados publicos do usuario.
 - Sem confirmacao de email por enquanto.
 - Sem recuperacao de senha por enquanto.
+- Sem JWT por enquanto.
 - Sem refresh token por enquanto.
 - Sem roles complexas por enquanto.
 
@@ -48,30 +49,27 @@ Comportamento esperado:
 
 - Validar se o usuario existe.
 - Validar senha usando `PasswordEncoder`.
-- Retornar um token JWT se as credenciais forem validas.
+- Retornar dados publicos do usuario se as credenciais forem validas.
 - Retornar erro padronizado se o email ou senha estiverem invalidos.
 
 ## 5. Sessao
 
-A sessao inicial deve ser stateless com JWT.
+A primeira etapa nao cria sessao real ainda. Ela valida cadastro e login, mantendo o backend stateless e pronto para receber JWT depois.
 
 Resposta esperada para login e cadastro:
 
 ```text
 {
-  "accessToken": "jwt",
-  "tokenType": "Bearer",
-  "user": {
-    "id": "uuid",
-    "name": "Nome",
-    "email": "email@example.com"
-  }
+  "id": "uuid",
+  "name": "Nome",
+  "email": "email@example.com",
+  "message": "Login successful."
 }
 ```
 
-Decisoes:
+Decisoes para depois:
 
-- Usar apenas access token no inicio.
+- Usar apenas access token quando JWT entrar.
 - Definir expiracao por variavel de ambiente.
 - Definir secret por variavel de ambiente.
 - Nao implementar refresh token agora.
@@ -84,10 +82,9 @@ Endpoints iniciais:
 ```text
 POST /auth/register
 POST /auth/login
-GET /auth/me
 ```
 
-`GET /auth/me` e opcional tecnicamente, mas recomendado porque ajuda o frontend a validar a sessao atual e preencher dados do usuario logado.
+`GET /auth/me` entra junto com JWT, porque depende de uma sessao autenticada.
 
 ## 7. Backend
 
@@ -101,9 +98,7 @@ auth/entity/AppUser.java
 auth/dto/RegisterRequest.java
 auth/dto/LoginRequest.java
 auth/dto/AuthResponse.java
-auth/dto/CurrentUserResponse.java
-auth/security/JwtService.java
-auth/security/JwtAuthenticationFilter.java
+auth/security/SecurityConfig.java
 ```
 
 Preferir `AppUser` em vez de `User` para evitar conflito conceitual com classes do Spring Security.
@@ -118,7 +113,7 @@ POST /auth/login
 OPTIONS /**
 ```
 
-Rotas privadas:
+Rotas privadas futuras:
 
 ```text
 GET /auth/me
@@ -130,19 +125,24 @@ Regras:
 - CSRF desabilitado para API stateless.
 - Sessao configurada como `STATELESS`.
 - CORS configurado por ambiente.
-- Filtro JWT antes do filtro padrao de username/password.
+- Filtro JWT entra depois, quando a dependencia e a estrategia de token forem aprovadas.
 
 ## 9. Variaveis de ambiente
 
 Variaveis esperadas:
 
 ```text
-JWT_SECRET
-JWT_EXPIRATION_SECONDS
 CORS_ALLOWED_ORIGINS
 DATABASE_URL
 DATABASE_USERNAME
 DATABASE_PASSWORD
+```
+
+Variaveis futuras para JWT:
+
+```text
+JWT_SECRET
+JWT_EXPIRATION_SECONDS
 ```
 
 Regras:
@@ -191,9 +191,8 @@ Cenarios minimos:
 - Deve logar com credenciais validas.
 - Deve rejeitar login com usuario inexistente.
 - Deve rejeitar login com senha incorreta.
-- Deve retornar `/auth/me` apenas com token valido.
-- Deve bloquear rota privada sem token.
-- Deve rejeitar token invalido.
+- Deve liberar `POST /auth/register` e `POST /auth/login` sem token.
+- Deve bloquear rotas nao liberadas.
 
 ## 12. Frontend
 
@@ -201,12 +200,11 @@ Mudancas esperadas:
 
 - Criar `authService`.
 - Integrar forms de `/cadastro` e `/login`.
-- Armazenar token de forma simples no inicio.
 - Redirecionar login bem-sucedido para `/app/dashboard`.
 - Preparar um wrapper de rota privada quando a area logada deixar de ser estatica.
 - Tratar loading, erro e sucesso nos formularios.
 
-Observacao: armazenamento do token pode comecar simples para aprendizado, mas deve ser revisado antes de producao publica mais sensivel.
+Observacao: armazenamento de token sera decidido quando JWT entrar.
 
 ## 13. Docker e deploy
 
@@ -242,7 +240,7 @@ Podemos iniciar o auth quando estas decisoes estiverem aceitas:
 
 - Cadastro usa `name`, `email`, `password`.
 - Entidade se chama `AppUser`.
-- Sessao usa JWT minimo.
+- Cadastro e login retornam dados publicos do usuario.
 - Senha usa BCrypt.
 - Testes entram junto da implementacao.
 - Primeiro deploy acontece depois de cadastro e login funcionando.

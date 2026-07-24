@@ -62,11 +62,6 @@ org.danielbreves.backend
   - entity
   - repository
   - service
-- shared
-  - config
-  - exception
-  - dto
-  - util
 ```
 
 Pacotes devem ser criados apenas quando houver responsabilidade real. Nao criar pastas vazias.
@@ -86,23 +81,22 @@ Cada feature pode ter:
 | `enums` | Guardar enums especificos da feature. |
 | `security` | Guardar filtros, providers, token services e detalhes de seguranca da feature de auth. |
 
-## 4. Pacote shared
+## 4. Codigo compartilhado
 
-O pacote `shared` deve guardar apenas elementos realmente compartilhados entre varias features.
+Nao criar `shared` no inicio apenas por convencao.
+
+Codigo compartilhado deve nascer somente quando mais de uma feature precisar da mesma responsabilidade. Enquanto uma classe pertence claramente a uma feature, ela deve ficar dentro da propria feature.
 
 Exemplos:
 
 ```text
-shared/config/SecurityConfig.java
-shared/config/CorsConfig.java
-shared/exception/GlobalExceptionHandler.java
-shared/exception/BusinessRuleException.java
-shared/exception/ResourceNotFoundException.java
-shared/dto/ApiErrorResponse.java
-shared/util/ClockProvider.java
+auth/security/SecurityConfig.java
+auth/security/CorsConfig.java
+auth/exception/AuthExceptionHandler.java
+project/exception/ProjectNotFoundException.java
 ```
 
-Regra: se uma classe pertence claramente a uma feature, ela deve ficar dentro da feature. Se ela e usada por varias features ou representa infraestrutura comum, ela pode ir para `shared`.
+Quando houver reutilizacao real entre modulos, o pacote compartilhado pode ser criado com escopo pequeno e nome explicito.
 
 ## 5. Fluxo padrao de uma request
 
@@ -244,14 +238,11 @@ No MVP, mappers manuais sao suficientes. Nao adicionar dependencia de mapping se
 
 Erros devem ser previsiveis para o frontend e consistentes em toda a API.
 
-Classes compartilhadas esperadas:
+Classes de erro devem comecar dentro da feature dona do fluxo.
 
 ```text
-shared/exception/GlobalExceptionHandler.java
-shared/exception/ResourceNotFoundException.java
-shared/exception/BusinessRuleException.java
-shared/exception/UnauthorizedOperationException.java
-shared/dto/ApiErrorResponse.java
+auth/exception/AuthExceptionHandler.java
+auth/dto/AuthErrorResponse.java
 ```
 
 Formato de erro:
@@ -287,14 +278,14 @@ Validacoes de campos devem retornar erro claro por campo. Regras de negocio deve
 
 Seguranca deve ficar dividida assim:
 
-- Configuracao global em `shared/config`.
+- Configuracao inicial em `auth/security`.
 - Implementacao especifica de auth em `auth/security`.
 - Regras de ownership dentro dos services das features.
 
 Exemplo:
 
 ```text
-shared/config/SecurityConfig.java
+auth/security/SecurityConfig.java
 auth/security/JwtService.java
 auth/security/JwtAuthenticationFilter.java
 auth/security/AuthenticatedUser.java
@@ -321,12 +312,10 @@ auth
 - dto/RegisterRequest.java
 - dto/LoginRequest.java
 - dto/AuthResponse.java
-- dto/CurrentUserResponse.java
 - entity/AppUser.java
 - repository/AppUserRepository.java
 - service/AuthService.java
-- security/JwtService.java
-- security/JwtAuthenticationFilter.java
+- security/SecurityConfig.java
 ```
 
 Endpoints iniciais:
@@ -334,14 +323,15 @@ Endpoints iniciais:
 ```text
 POST /auth/register
 POST /auth/login
-GET /auth/me
 ```
+
+O primeiro passo do auth deve validar cadastro e login com BCrypt. JWT, `GET /auth/me` e filtros de autenticacao entram depois da aprovacao da dependencia e da estrategia de sessao.
 
 ## 16. Checklist para novas features backend
 
 - A feature tem pacote proprio?
 - Controllers, DTOs, services, repositories e entities estao dentro da feature?
-- Apenas codigo compartilhado foi para `shared`?
+- Codigo compartilhado so foi criado quando existe reutilizacao real?
 - Controller chama apenas service?
 - Service concentra regra de negocio?
 - Repository nao contem regra de negocio?
@@ -357,5 +347,5 @@ GET /auth/me
 Esta arquitetura esta pronta para a implementacao do auth quando:
 
 - O pacote `auth` for criado seguindo a organizacao por feature.
-- O pacote `shared` for criado apenas para configuracoes e exceptions compartilhadas.
+- As configuracoes iniciais de seguranca estiverem em `auth/security`.
 - As rotas de auth tiverem testes unitarios e de controller.
