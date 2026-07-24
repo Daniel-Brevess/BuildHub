@@ -1,4 +1,4 @@
-package org.danielbreves.backend.config;
+package org.danielbreves.backend.shared.config;
 
 import java.util.List;
 
@@ -18,8 +18,6 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 @EnableWebSecurity
 public class SecurityConfig {
 
-    private static final String WAITLIST_ENDPOINT = "/waitlist/enter";
-
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http
@@ -28,7 +26,6 @@ public class SecurityConfig {
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
-                        .requestMatchers(HttpMethod.POST, WAITLIST_ENDPOINT).permitAll()
                         .anyRequest().denyAll()
                 )
                 .build();

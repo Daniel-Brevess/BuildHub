@@ -94,16 +94,16 @@ GET /auth/me
 Estrutura sugerida:
 
 ```text
-controller/AuthController.java
-service/AuthService.java
-repository/AppUserRepository.java
-entities/AppUser.java
-dto/RegisterRequest.java
-dto/LoginRequest.java
-dto/AuthResponse.java
-dto/CurrentUserResponse.java
-security/JwtService.java
-security/JwtAuthenticationFilter.java
+auth/controller/AuthController.java
+auth/service/AuthService.java
+auth/repository/AppUserRepository.java
+auth/entity/AppUser.java
+auth/dto/RegisterRequest.java
+auth/dto/LoginRequest.java
+auth/dto/AuthResponse.java
+auth/dto/CurrentUserResponse.java
+auth/security/JwtService.java
+auth/security/JwtAuthenticationFilter.java
 ```
 
 Preferir `AppUser` em vez de `User` para evitar conflito conceitual com classes do Spring Security.
@@ -115,7 +115,6 @@ Rotas publicas iniciais:
 ```text
 POST /auth/register
 POST /auth/login
-POST /waitlist/enter
 OPTIONS /**
 ```
 

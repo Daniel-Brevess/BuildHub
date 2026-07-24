@@ -1,315 +1,361 @@
-**Task 4**
-
 # Arquitetura do backend do BuildHub
 
-Este documento define a organização oficial do backend, as responsabilidades de cada camada, o fluxo de requests, padrões de DTO, mapper, exception, validação e checklist para novos módulos.
+Este documento define a organizacao oficial do backend, as responsabilidades de cada camada dentro de uma feature, o fluxo de requests, padroes de DTO, mapper, exception, validacao e checklist para novos modulos.
 
 - Java 21
-
 - Spring Boot
-
+- Spring Security
 - Spring Data JPA
-
 - PostgreSQL
 
-## 1. Estado atual
+## 1. Decisao principal
 
-O backend já possui uma estrutura por camadas e um fluxo inicial de waitlist usando controller, DTO, service, repository e entity. A Task 4 formaliza esse padrão para os módulos reais do MVP.
+O backend deve ser organizado por feature/sessao, nao por camada global.
 
-### Pacotes existentes
+Em vez de manter todos os controllers em um pacote unico, todos os services em outro pacote unico e todos os repositories em outro pacote unico, cada feature deve concentrar suas proprias camadas.
 
-- `config`
+Exemplo:
 
-- `controller`
+```text
+auth
+- controller
+- dto
+- entity
+- repository
+- service
+- security
+```
 
-- `dto`
+Essa estrutura deixa mais claro onde cada fluxo vive, reduz navegacao entre pastas distantes e facilita evoluir uma feature sem espalhar arquivos pelo projeto inteiro.
 
-- `entities`
+## 2. Estrutura base esperada
 
-- `repository`
+Estrutura recomendada para o backend:
 
-- `service`
+```text
+org.danielbreves.backend
+- auth
+  - controller
+  - dto
+  - entity
+  - repository
+  - service
+  - security
+- project
+  - controller
+  - dto
+  - entity
+  - repository
+  - service
+  - mapper
+  - enums
+- application
+  - controller
+  - dto
+  - entity
+  - repository
+  - service
+  - mapper
+- conversation
+  - controller
+  - dto
+  - entity
+  - repository
+  - service
+- shared
+  - config
+  - exception
+  - dto
+  - util
+```
 
-### Pacotes a criar quando necessário
+Pacotes devem ser criados apenas quando houver responsabilidade real. Nao criar pastas vazias.
 
-- `mapper`
+## 3. Responsabilidade por feature
 
-- `exception`
+Cada feature pode ter:
 
-- `enums`
+| Pasta | Responsabilidade |
+| --- | --- |
+| `controller` | Receber requisicoes HTTP, validar DTOs de entrada e retornar responses. |
+| `dto` | Definir contratos publicos de entrada e saida daquela feature. |
+| `entity` | Representar tabelas e relacionamentos daquela feature. |
+| `repository` | Isolar acesso ao banco da feature. |
+| `service` | Executar casos de uso, regras de negocio e transacoes. |
+| `mapper` | Converter entre entity e DTO quando a conversao deixar de ser trivial. |
+| `enums` | Guardar enums especificos da feature. |
+| `security` | Guardar filtros, providers, token services e detalhes de seguranca da feature de auth. |
 
-- `security`, quando auth/JWT entrar na Fase 2
+## 4. Pacote shared
 
-Decisão: manter o pacote entities, pois
-ele já existe no projeto. A documentação usa esse nome como padrão
-oficial para as entidades JPA.
+O pacote `shared` deve guardar apenas elementos realmente compartilhados entre varias features.
 
-## 2. Estrutura de pacotes
+Exemplos:
 
-| Pacote | Responsabilidade | Exemplo |
-| --- | --- | --- |
-| `controller` | Receber requisições HTTP, validar DTOs de entrada e retornar respostas. | `ProjectController` |
-| `service` | Executar casos de uso, regras de negócio e transações. | `ProjectService` |
-| `repository` | Isolar acesso ao banco com Spring Data JPA. | `ProjectRepository` |
-| `entities` | Representar tabelas, relacionamentos e constraints JPA. | `Project` |
-| `dto` | Definir contratos de entrada e saída da API. | `CreateProjectRequest`, `ProjectResponse` |
-| `mapper` | Converter entity para response DTO e request DTO para entity quando fizer sentido. | `ProjectMapper` |
-| `exception` | Centralizar exceptions de domínio e tratamento global de erros. | `GlobalExceptionHandler` |
-| `config` | Concentrar configurações técnicas da aplicação. | `SecurityConfig` |
-| `enums` | Guardar enums compartilhados pelo domínio. | `ApplicationStatus` |
-| `security` | Organizar autenticação, JWT, filtros e utilitários de segurança na Fase 2. | `JwtService` |
+```text
+shared/config/SecurityConfig.java
+shared/config/CorsConfig.java
+shared/exception/GlobalExceptionHandler.java
+shared/exception/BusinessRuleException.java
+shared/exception/ResourceNotFoundException.java
+shared/dto/ApiErrorResponse.java
+shared/util/ClockProvider.java
+```
 
-## 3. Fluxo padrão de uma request
+Regra: se uma classe pertence claramente a uma feature, ela deve ficar dentro da feature. Se ela e usada por varias features ou representa infraestrutura comum, ela pode ir para `shared`.
 
-Toda funcionalidade de backend deve seguir um caminho previsível. Isso reduz acoplamento, facilita testes e impede regra de negócio em controllers.
+## 5. Fluxo padrao de uma request
 
-- Controller
+Toda funcionalidade de backend deve seguir um caminho previsivel.
 
-- Request DTO
+```text
+Controller
+Request DTO
+Service
+Repository
+Entity
+Mapper
+Response DTO
+```
 
-- Service
-
-- Repository
-
-- Entity
-
-- Mapper
-
-- Response DTO
+Exemplo:
 
 ```text
 POST /projects
-Controller recebe CreateProjectRequest
-Controller chama ProjectService.create(request)
-Service valida regras de negócio
-Service usa ProjectRepository
-Service retorna entidade ou resultado de domínio
-Mapper converte para ProjectResponse
-Controller retorna ResponseEntity
-` ## 4. Responsabilidades por camada ### Controller Define rota, verbo HTTP e status de resposta. Recebe `@Valid @RequestBody` quando houver body. Chama apenas services. Não acessa repository diretamente. Não contém regra de negócio. ### Service Concentra casos de uso. Valida regras de negócio. Controla transações com `@Transactional`. Coordena repositories e mappers. Lança exceptions de domínio quando necessário. ### Repository Estende interfaces do Spring Data JPA. Declara queries customizadas quando necessário. Não contém regra de negócio. Não retorna DTO por padrão no MVP. ### Entity Representa tabela e relacionamentos. Usa nomes e constraints compatíveis com o DER. Não deve ser exposta diretamente pela API. Relacionamentos devem usar `LAZY` por padrão. ## 5. DTOs DTOs são o contrato da API. Eles protegem entidades internas e deixam claro o que entra e o que sai de cada endpoint.
+ProjectController recebe CreateProjectRequest
+ProjectController chama ProjectService.create(request)
+ProjectService valida regras de negocio
+ProjectService usa ProjectRepository
+ProjectMapper converte entity para ProjectResponse
+ProjectController retorna ResponseEntity<ProjectResponse>
+```
+
+## 6. Controllers
+
+Controllers devem:
+
+- Definir rota, verbo HTTP e status de resposta.
+- Receber `@Valid @RequestBody` quando houver body.
+- Chamar apenas services.
+- Retornar DTOs.
+- Nao acessar repository diretamente.
+- Nao conter regra de negocio.
+
+## 7. Services
+
+Services devem:
+
+- Concentrar casos de uso.
+- Validar regras de negocio.
+- Controlar transacoes com `@Transactional`.
+- Coordenar repositories e mappers.
+- Lancar exceptions de dominio quando necessario.
+
+Services de escrita devem usar `@Transactional`.
+
+Services apenas de leitura devem usar `@Transactional(readOnly = true)`.
+
+## 8. Repositories
+
+Repositories devem:
+
+- Estender interfaces do Spring Data JPA.
+- Declarar queries customizadas quando necessario.
+- Nao conter regra de negocio.
+- Nao retornar DTO por padrao no MVP.
+
+Queries customizadas devem existir quando ajudarem a evitar N+1, buscar dados explicitamente ou proteger regras importantes.
+
+## 9. Entities
+
+Entities devem:
+
+- Representar tabelas, constraints e relacionamentos.
+- Usar nomes coerentes com o dominio.
+- Nao ser expostas diretamente pela API.
+- Usar relacionamentos `LAZY` por padrao.
+- Evitar cascades amplos sem motivo forte.
+
+Para auth, a entidade inicial deve se chamar `AppUser`, nao `User`, para evitar confusao com tipos do Spring Security.
+
+## 10. DTOs
+
+DTOs sao o contrato da API.
 
 ### Request DTO
 
 - Usar suffix `Request`.
-
 - Representar entrada de um caso de uso.
+- Receber Bean Validation.
+- Nao conter campos calculados pelo backend.
 
-- Receber anotações de validação.
-
-- Não conter campos calculados pelo backend.
+Exemplos:
 
 ```text
+RegisterRequest
+LoginRequest
 CreateProjectRequest
 UpdateProjectRequest
 CreateApplicationRequest
 ```
+
 ### Response DTO
 
 - Usar suffix `Response`.
+- Representar saida publica da API.
+- Nao expor senha, hash, tokens internos ou dados sensiveis.
+- Pode agregar dados uteis para a tela.
 
-- Representar saída pública da API.
-
-- Não expor senha, hash, tokens ou dados sensíveis.
-
-- Pode agregar dados úteis para a tela.
+Exemplos:
 
 ```text
+AuthResponse
+CurrentUserResponse
 ProjectResponse
 ApplicationResponse
 ConversationResponse
 ```
-Decisão: records são uma boa opção para DTOs simples,
-seguindo o padrão já usado em WaitingRequestDTO e
-WaitingResponseDTO.
 
-## 6. Mappers
+Records sao uma boa opcao para DTOs simples.
 
-Mappers devem concentrar conversões entre entidades e DTOs quando a conversão deixar de ser trivial. No MVP, mappers manuais são suficientes; não há necessidade de adicionar dependência de mapping.
+## 11. Mappers
 
-### Quando criar mapper
+Mappers devem ser criados quando a conversao deixar de ser trivial.
 
-- Quando a resposta tiver vários campos.
+Quando criar mapper:
 
-- Quando houver conversão de enums ou campos derivados.
+- Quando a response tiver varios campos.
+- Quando houver conversao de enums ou campos derivados.
+- Quando mais de um service precisar da mesma conversao.
+- Quando o controller ficaria poluido com montagem de response.
 
-- Quando mais de um service precisar da mesma conversão.
-
-- Quando o controller ficaria poluído com montagem de resposta.
-
-### Padrão
-
-- Nome do recurso + `Mapper`.
-
-- Métodos pequenos e explícitos.
-
-- Sem acesso a repository.
-
-- Sem regra de negócio relevante.
+Padrao:
 
 ```text
-ProjectMapper
+project/mapper/ProjectMapper.java
 - toResponse(Project project)
 - toSummaryResponse(Project project)
-- toEntity(CreateProjectRequest request, User owner)
+- toEntity(CreateProjectRequest request, AppUser owner)
 ```
-## 7. Exceptions e resposta de erro
 
-Erros devem ser previsíveis para o frontend e consistentes em toda a API. A aplicação deve ter exceptions de domínio e um handler global.
+No MVP, mappers manuais sao suficientes. Nao adicionar dependencia de mapping sem necessidade real.
 
-### Classes esperadas
+## 12. Exceptions e resposta de erro
 
-- `ApiErrorResponse`
+Erros devem ser previsiveis para o frontend e consistentes em toda a API.
 
-- `GlobalExceptionHandler`
+Classes compartilhadas esperadas:
 
-- `ResourceNotFoundException`
+```text
+shared/exception/GlobalExceptionHandler.java
+shared/exception/ResourceNotFoundException.java
+shared/exception/BusinessRuleException.java
+shared/exception/UnauthorizedOperationException.java
+shared/dto/ApiErrorResponse.java
+```
 
-- `BusinessRuleException`
-
-- `UnauthorizedOperationException`
-
-### Formato de erro
+Formato de erro:
 
 ```text
 {
-"message": "Mensagem clara para o erro.",
-"code": "ERROR_CODE",
-"field": "email"
+  "message": "Mensagem clara para o erro.",
+  "code": "ERROR_CODE",
+  "field": "email"
 }
 ```
-Validações de campos devem retornar erro claro por campo. Regras de
-negócio devem retornar código previsível, por exemplo
-DUPLICATE_APPLICATION.
 
-## 8. Validação
+Validacoes de campos devem retornar erro claro por campo. Regras de negocio devem retornar codigo previsivel, por exemplo `DUPLICATE_EMAIL`.
+
+## 13. Validacao
 
 ### DTO
 
-- Usar Bean Validation para formato e obrigatoriedade.
-
-- `@NotBlank` para textos obrigatórios.
-
+- `@NotBlank` para textos obrigatorios.
 - `@Email` para email.
-
 - `@Size` para limites de texto.
-
-- `@NotNull` para enums e IDs obrigatórios.
+- `@NotNull` para enums e IDs obrigatorios.
 
 ### Service
 
-- Validar regra de negócio.
+- Validar regra de negocio.
+- Validar permissao e ownership.
+- Validar duplicidade logica.
+- Validar transicao de status.
+- Validar consistencia entre entidades relacionadas.
 
-- Validar permissão e ownership.
+## 14. Seguranca
 
-- Validar duplicidade lógica.
+Seguranca deve ficar dividida assim:
 
-- Validar transição de status.
+- Configuracao global em `shared/config`.
+- Implementacao especifica de auth em `auth/security`.
+- Regras de ownership dentro dos services das features.
 
-- Validar consistência entre entidades relacionadas.
-
-```text
 Exemplo:
-Se Application.type = POSITION_APPLICATION, position_id é obrigatório.
-Se Application.type = PROJECT_JOIN_REQUEST, position_id deve ser nulo.
-```
-## 9. Transações
-
-- Services de escrita devem usar `@Transactional`.
-
-- Services apenas de leitura devem usar `@Transactional(readOnly = true)`.
-
-- Controller não deve controlar transação.
-
-- Repository não deve esconder transações complexas.
-
-- Fluxos com múltiplas entidades devem ser coordenados no service.
-
-Criar uma Application e a respectiva
-Conversation é um exemplo de operação que deve acontecer
-dentro da mesma transação.
-
-## 10. Relacionamentos JPA
-
-- Preferir `FetchType.LAZY` em relacionamentos.
-
-- Evitar expor entidades com relacionamentos diretamente na API.
-
-- Evitar cascades amplos sem motivo forte.
-
-- Usar queries explícitas quando houver risco de N+1.
-
-- Tabelas de junção com entidade própria devem ter `id` e unique constraint.
-
-## 11. Segurança dentro da arquitetura
-
-A implementação completa de autenticação entra na Fase 2, mas a arquitetura já deve reservar espaço para segurança.
-
-### Agora
-
-- Não expor `password_hash` em responses.
-
-- Não confiar no frontend para regras críticas.
-
-- Separar validação de entrada e regra de negócio.
-
-- Manter `SecurityConfig` em `config`.
-
-### Fase 2
-
-- Criar pacote `security` se necessário.
-
-- Adicionar JWT service, filtros e autenticação.
-
-- Revisar CORS por ambiente.
-
-- Proteger rotas privadas.
-
-## 12. Padrão por módulo
-
-Ao criar um novo módulo do MVP, o mínimo esperado é que ele seja implementado de forma consistente com as camadas abaixo.
 
 ```text
-ProjectController
-ProjectService
-ProjectRepository
-Project
-CreateProjectRequest
-UpdateProjectRequest
-ProjectResponse
-ProjectMapper
-ProjectStatus
-ProjectType
+shared/config/SecurityConfig.java
+auth/security/JwtService.java
+auth/security/JwtAuthenticationFilter.java
+auth/security/AuthenticatedUser.java
 ```
-Nem todo módulo precisa de todos esses arquivos desde o primeiro
-commit. A regra é criar a camada quando ela tiver responsabilidade
-real, sem inventar abstração vazia.
 
-## 13. Checklist para novos módulos backend
+Regras:
 
-- Existe uma entidade ou caso de uso claro?
+- Nunca expor `passwordHash`.
+- Nunca confiar no frontend para regras criticas.
+- Usar BCrypt para senhas.
+- Usar JWT minimo no inicio.
+- Guardar secrets em variaveis de ambiente.
+- Revisar CORS por ambiente antes de deploy.
 
+## 15. Padrao inicial para auth
+
+Auth deve ser a primeira feature real nessa nova arquitetura.
+
+Estrutura inicial:
+
+```text
+auth
+- controller/AuthController.java
+- dto/RegisterRequest.java
+- dto/LoginRequest.java
+- dto/AuthResponse.java
+- dto/CurrentUserResponse.java
+- entity/AppUser.java
+- repository/AppUserRepository.java
+- service/AuthService.java
+- security/JwtService.java
+- security/JwtAuthenticationFilter.java
+```
+
+Endpoints iniciais:
+
+```text
+POST /auth/register
+POST /auth/login
+GET /auth/me
+```
+
+## 16. Checklist para novas features backend
+
+- A feature tem pacote proprio?
+- Controllers, DTOs, services, repositories e entities estao dentro da feature?
+- Apenas codigo compartilhado foi para `shared`?
 - Controller chama apenas service?
+- Service concentra regra de negocio?
+- Repository nao contem regra de negocio?
+- DTOs escondem dados sensiveis?
+- Validacoes simples estao no request DTO?
+- Validacoes de negocio estao no service?
+- Exceptions sao padronizadas?
+- Relacionamentos JPA evitam EAGER desnecessario?
+- O modulo tem testes compativeis com o risco da alteracao?
 
-- Service concentra regra de negócio?
+## 17. Criterio de conclusao
 
-- Repository não contém regra de negócio?
+Esta arquitetura esta pronta para a implementacao do auth quando:
 
-- DTOs escondem dados sensíveis?
-
-- Validações simples estão no request DTO?
-
-- Validações de negócio estão no service?
-
-- Exceptions são padronizadas?
-
-- Mappers foram criados quando a conversão deixou de ser trivial?
-
-- Relacionamentos JPA evitam EAGER desnecessário?
-
-- O módulo tem testes compatíveis com o risco da alteração?
-
-## 14. Critério de conclusão da Task 4
-
-A Task 4 é considerada concluída quando esta documentação estiver criada e alinhada com o backend atual. A implementação de pacotes como `mapper` e `exception` acontecerá quando os módulos reais exigirem essas responsabilidades.
-
-BuildHub - Arquitetura do backend. Este documento deve ser revisado antes da implementação dos módulos reais do MVP.
+- O pacote `auth` for criado seguindo a organizacao por feature.
+- O pacote `shared` for criado apenas para configuracoes e exceptions compartilhadas.
+- As rotas de auth tiverem testes unitarios e de controller.
