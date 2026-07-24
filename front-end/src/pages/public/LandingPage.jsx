@@ -10,6 +10,7 @@ import {
 } from 'lucide-react'
 import logoBlack from '../../assets/logo1.png'
 import { getInitialColorMode, persistColorMode } from './themeMode'
+import AuthForm from './components/AuthForm'
 
 const themes = {
   light: {
@@ -64,85 +65,6 @@ const socialLinks = [
   { name: 'Discord', href: '#', icon: MessageSquare },
   { name: 'Developer LinkedIn', href: 'https://www.linkedin.com/', icon: ExternalLink },
 ]
-
-function AuthForm({ type }) {
-  const isLogin = type === 'login'
-
-  return (
-    <form
-      className="absolute right-0 top-[calc(100%+0.75rem)] z-50 w-72 rounded-3xl border border-[var(--border)] bg-[var(--card)] p-4 text-[var(--text)] shadow-2xl shadow-[var(--shadow)] sm:w-80"
-      onSubmit={(event) => event.preventDefault()}
-    >
-      <h2 className="text-base font-semibold tracking-normal">
-        {isLogin ? 'Entrar' : 'Criar conta'}
-      </h2>
-      <p className="mt-1 text-sm font-medium text-[var(--text-soft)]">
-        {isLogin ? 'Acesse seu espaco BuildHub.' : 'Monte seu perfil de builder.'}
-      </p>
-
-      <div className="mt-4 grid gap-3">
-        {!isLogin && (
-          <>
-            <label className="sr-only" htmlFor="signup-username">
-              Username
-            </label>
-            <input
-              autoComplete="username"
-              className="min-h-11 rounded-2xl border border-[var(--border)] bg-[var(--background)] px-4 text-sm font-medium outline-none transition placeholder:text-[var(--text-soft)] focus:border-[var(--text)]"
-              id="signup-username"
-              placeholder="Username"
-              type="text"
-            />
-          </>
-        )}
-
-        <label className="sr-only" htmlFor={`${type}-email`}>
-          Email
-        </label>
-        <input
-          autoComplete="email"
-          className="min-h-11 rounded-2xl border border-[var(--border)] bg-[var(--background)] px-4 text-sm font-medium outline-none transition placeholder:text-[var(--text-soft)] focus:border-[var(--text)]"
-          id={`${type}-email`}
-          placeholder="Email"
-          type="email"
-        />
-
-        <label className="sr-only" htmlFor={`${type}-password`}>
-          Senha
-        </label>
-        <input
-          autoComplete={isLogin ? 'current-password' : 'new-password'}
-          className="min-h-11 rounded-2xl border border-[var(--border)] bg-[var(--background)] px-4 text-sm font-medium outline-none transition placeholder:text-[var(--text-soft)] focus:border-[var(--text)]"
-          id={`${type}-password`}
-          placeholder="Senha"
-          type="password"
-        />
-
-        {!isLogin && (
-          <>
-            <label className="sr-only" htmlFor="signup-confirm-password">
-              Confirmar senha
-            </label>
-            <input
-              autoComplete="new-password"
-              className="min-h-11 rounded-2xl border border-[var(--border)] bg-[var(--background)] px-4 text-sm font-medium outline-none transition placeholder:text-[var(--text-soft)] focus:border-[var(--text)]"
-              id="signup-confirm-password"
-              placeholder="Confirmar senha"
-              type="password"
-            />
-          </>
-        )}
-
-        <button
-          className="inline-flex min-h-11 items-center justify-center rounded-2xl bg-[var(--inverted)] px-4 text-sm font-semibold text-[var(--button-text)] transition hover:bg-[var(--inverted-soft)]"
-          type="submit"
-        >
-          {isLogin ? 'Entrar' : 'Criar conta'}
-        </button>
-      </div>
-    </form>
-  )
-}
 
 function LandingPage() {
   const [colorMode, setColorMode] = useState(getInitialColorMode)
@@ -245,7 +167,9 @@ function LandingPage() {
                   {type === 'login' ? 'Login' : 'Cadastro'}
                 </button>
 
-                {activeAuthCard === type && <AuthForm type={type} />}
+                {activeAuthCard === type && (
+                  <AuthForm mode={type} onSuccess={() => setActiveAuthCard(null)} />
+                )}
               </div>
             ))}
           </div>
